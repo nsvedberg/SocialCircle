@@ -1,0 +1,69 @@
+{
+    "Users":[
+    
+        {
+            "email" : "a@gmail.com",
+            "password" : "pass"
+        },
+        {
+            "email" : "b@gmail.com",
+            "password" : "pass2"
+        }
+    ],
+
+    "Clubs": [
+        {
+            "club_name": "Soccer Club",
+            "Members": 40,
+            "Link": "www.unccsoccerclub.edu"
+        },
+        {
+            "club_name": "Robotics Club",
+            "Members": 35,
+            "Link": "www.unccroboticsclub.edu"
+        },
+        {
+            "club_name": "Photography Club",
+            "Members": 25,
+            "Link": "www.unccphotography.edu"
+        },
+        {
+            "club_name": "Dance Club",
+            "Members": 50,
+            "Link": "www.unccdanceclub.edu"
+        },
+        {
+            "club_name": "Chess Club",
+            "Members": 20,
+            "Link": "www.unccchessclub.edu"
+        },
+        {
+            "club_name": "Art Club",
+            "Members": 30,
+            "Link": "www.unccartclub.edu"
+        },
+        {
+            "club_name": "Coding Club",
+            "Members": 60,
+            "Link": "www.uncccodingclub.edu"
+        },
+        {
+            "club_name": "Music Club",
+            "Members": 45,
+            "Link": "www.unccmusicclub.edu"
+        },
+        {
+            "club_name": "Drama Club",
+            "Members": 55,
+            "Link": "www.unccdramaclub.edu"
+        },
+        {
+            "club_name": "Environmental Club",
+            "Members": 28,
+            "Link": "www.unccenvironmentalclub.edu"
+        }
+    ]
+    
+
+    
+}
