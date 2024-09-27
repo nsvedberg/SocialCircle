@@ -1,0 +1,30 @@
+/* ChatList.css */
+.chat-list {
+    padding: 20px;
+  }
+  
+  .chat-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .chat-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .chat-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-info h2 {
+    margin: 0;
+    font-size: 1.2em;
+  }
+  
+  .chat-info p {
+    margin: 5px 0 0;
+    color: #666;
+  }
+  
