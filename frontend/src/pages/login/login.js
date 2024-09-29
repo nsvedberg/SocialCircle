@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import './login.css' 
 
@@ -19,8 +18,6 @@ const Login = () => {
       console.log(user)
       return user;
     }
-
-    
   
     const handleSubmit = async(e) => {
       e.preventDefault();
@@ -34,15 +31,14 @@ const Login = () => {
       }
     };
 
-
     return (
       <div>
        
         <div className="login-form-container">
-          <h2>Login</h2>
+          <h2>Log In</h2>
           <form onSubmit={handleSubmit}>
             <div>
-              <label>email:</label>
+              <label>Email:</label>
               <input
                 type="text"
                 value={email}
