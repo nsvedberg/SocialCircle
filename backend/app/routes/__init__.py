@@ -6,10 +6,6 @@ from flask import Blueprint, abort, jsonify, request
 
 router = Blueprint('user', __name__, url_prefix='/user')
 
-@app.route('/')
-def home():
-    return "Hello, Flask!"
-
 #needs to be updated when relationships are finalized in the database
 @app.route('/clubs/new', methods=['POST'])
 def create_club():
@@ -143,4 +139,3 @@ def update_user(user_id):
     user.user_interests = data['user_interests']
     session.commit()
     return jsonify(user)
-
