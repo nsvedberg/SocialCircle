@@ -27,6 +27,42 @@ def create_club():
     session.commit()
     return jsonify(new_club)
 
+@app.route('/clubs', methods=['GET'])
+def get_clubs():
+    session = Session()
+    clubs = session.query(Clubs).all()
+    return jsonify(clubs)
+
+@app.route('/clubs/<int:club_id>', methods=['GET'])
+def get_club(club_id):
+    session = Session()
+    club = session.query(Clubs).get(club_id)
+    return jsonify(club)
+
+@app.route('/clubs/<int:club_id>', methods=['DELETE'])
+def delete_club(club_id):
+    session = Session()
+    club = session.query(Clubs).get(club_id)
+    session.delete(club)
+    session.commit()
+    return jsonify(club)
+
+
+# commented out until we have the DB relationships finalized
+# @app.route('/clubs/<int:club_id>', methods=['PUT'])
+# def update_club(club_id):
+#     session = Session()
+#     data = request.get_json()
+#     club = session.query(Clubs).get(club_id)
+#     club.club_name = data['club_name']
+#     club.club_description = data['club_description']
+#     club.club_president = data['club_president']
+#     club.club_email = data['club_email']
+#     club.club_tags = data['club_tags']
+#     club.club_members = data['club_members']
+#     session.commit()
+#     return jsonify(club)
+
 @app.route('/events/new', methods=['POST'])
 def create_event():
     session = Session()
