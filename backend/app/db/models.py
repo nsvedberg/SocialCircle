@@ -40,7 +40,7 @@ class Clubs(Model):
     # TODO: relationship to user for club members
     # TODO: relationship to interests
 
-    def init(self, name, description):
+    def init(self, name, description, leader):
         self.name = name
         self.description = description
 
