@@ -53,8 +53,8 @@ class Events(Model):
     name: Mapped[str]
     description: Mapped[str]
 
-    when: Mapped[DateTime]
-    location: String
+    when: Mapped[datetime]
+    location: Mapped[str]
 
     # TODO: relationship to club, tags, etc...
 
