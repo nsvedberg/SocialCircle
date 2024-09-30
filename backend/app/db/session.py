@@ -16,7 +16,7 @@ engine = create_engine(DATABASE_URL)
 
 def init_db():
     """Create all of the required tables in the PostgreSQL database."""
-    import jobsync.db.models
+    from app.db.models import Model
 
     Model.metadata.create_all(bind=engine)
 
