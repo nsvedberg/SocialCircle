@@ -8,7 +8,7 @@ const Dashboard = () => {
   // Fetch clubs from the backend
   const getClubs = async () => {
     try {
-      const data = await fetch("http://localhost:3000/Clubs");
+      const data = await fetch("http://127.0.0.1:5000/clubs");
       const clubsData = await data.json();
       console.log(clubsData )
       setClubs(clubsData); // Assuming the data contains a Clubs array
