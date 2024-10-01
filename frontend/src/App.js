@@ -5,12 +5,15 @@ import Dashboard from './pages/dashboard/dashboard'
 import Profile from './pages/profile/profile'
 import ChatList from './pages/chatList/ChatList';
 import Chatbot from './pages/message/Chatbot';
+import CreateClub from './pages/club/createClubs';
 
 function App() {
+
   return (
-    <BrowserRouter>
+    <BrowserRouter> 
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/clubs/new" element={<CreateClub />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/profile" element={<Profile />} />
