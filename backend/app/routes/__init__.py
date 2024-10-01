@@ -11,16 +11,41 @@ router = Blueprint('user', __name__, url_prefix='/user')
 def create_club():
     session = Session()
     data = request.get_json()
-    new_club = Clubs(club_name=data['club_name'], club_description=data['club_description'], club_president=data['club_president'], club_email=data['club_email'], club_tags=data['club_tags'], club_members=data['club_members'])
+    new_club = Clubs(
+        name=data['club_name'], 
+        description=data['club_description'], 
+        #club_president=data['club_president'], Commented parts that haven't been added to the Club model yet.
+        #club_email=data['club_email'], 
+        #club_tags=data['club_tags'], 
+        #club_members=data['club_members']
+    )
     session.add(new_club)
     session.commit()
-    return jsonify(new_club)
+    # Type Club can't be JSON serialized so I'm converting to a dict
+    club_dict = {
+        #'id': new_club.id, 
+        'club_name': new_club.name,
+        'club_description': new_club.description,
+        #'club_president': new_club.club_president,
+        #'club_email': new_club.club_email,
+        #'club_tags': new_club.club_tags,
+        #'club_members': new_club.club_members
+    }
+    return jsonify(club_dict)
 
 @app.route('/clubs', methods=['GET'])
 def get_clubs():
     session = Session()
     clubs = session.query(Clubs).all()
-    return jsonify(clubs)
+    # Conver Clubs to dicts before jsonify
+    clubs_list = []
+    for club in clubs:
+        club_dict = {
+            'club_name': club.name,
+            'club_description': club.description
+        }
+        clubs_list.append(club_dict)
+    return jsonify(clubs_list)
 
 @app.route('/clubs/<int:club_id>', methods=['GET'])
 def get_club(club_id):
@@ -139,3 +164,5 @@ def update_user(user_id):
     user.user_interests = data['user_interests']
     session.commit()
     return jsonify(user)
+
+

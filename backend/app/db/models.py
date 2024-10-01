@@ -1,6 +1,7 @@
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
+from sqlalchemy import Integer, String
 
 from datetime import datetime
 
@@ -40,7 +41,7 @@ class Clubs(Model):
     # TODO: relationship to user for club members
     # TODO: relationship to interests
 
-    def init(self, name, description, leader):
+    def init(self, name, description):
         self.name = name
         self.description = description
 
