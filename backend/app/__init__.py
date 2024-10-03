@@ -16,6 +16,7 @@ else:
 
 CORS(app, resources={r"/clubs/*": {"origins": "http://localhost:3000"}})
 
+app.secret_key = getenv("FLASK_SECRET_KEY")
 
 from app import routes
 

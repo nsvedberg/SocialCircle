@@ -1,6 +1,6 @@
 from app import app
 from app.db.session import Session
-from app.db.models import Clubs, Events, Users
+from app.db.models import Club, Event, User
 
 from flask import Blueprint, abort, jsonify, request
 
@@ -11,7 +11,7 @@ router = Blueprint('user', __name__, url_prefix='/user')
 def create_club():
     session = Session()
     data = request.get_json()
-    new_club = Clubs(
+    new_club = Club(
         name=data['club_name'], 
         description=data['club_description'], 
         #club_president=data['club_president'], Commented parts that haven't been added to the Club model yet.
@@ -36,7 +36,7 @@ def create_club():
 @app.route('/clubs', methods=['GET'])
 def get_clubs():
     session = Session()
-    clubs = session.query(Clubs).all()
+    clubs = session.query(Club).all()
     # Conver Clubs to dicts before jsonify
     clubs_list = []
     for club in clubs:
@@ -50,13 +50,13 @@ def get_clubs():
 @app.route('/clubs/<int:club_id>', methods=['GET'])
 def get_club(club_id):
     session = Session()
-    club = session.query(Clubs).get(club_id)
+    club = session.query(Club).get(club_id)
     return jsonify(club)
 
 @app.route('/clubs/<int:club_id>', methods=['DELETE'])
 def delete_club(club_id):
     session = Session()
-    club = session.query(Clubs).get(club_id)
+    club = session.query(Club).get(club_id)
     session.delete(club)
     session.commit()
     return jsonify(club)
@@ -67,7 +67,7 @@ def delete_club(club_id):
 def update_club(club_id):
     session = Session()
     data = request.get_json()
-    club = session.query(Clubs).get(club_id)
+    club = session.query(Club).get(club_id)
     club.club_name = data['club_name']
     club.club_description = data['club_description']
     club.club_president = data['club_president']
@@ -81,7 +81,7 @@ def update_club(club_id):
 def create_event():
     session = Session()
     data = request.get_json()
-    new_event = Events(event_name=data['event_name'], event_description=data['event_description'], event_date=data['event_date'], event_time=data['event_time'], event_location=data['event_location'], event_club=data['event_club'], event_tags=data['event_tags'])
+    new_event = Event(event_name=data['event_name'], event_description=data['event_description'], event_date=data['event_date'], event_time=data['event_time'], event_location=data['event_location'], event_club=data['event_club'], event_tags=data['event_tags'])
     session.add(new_event)
     session.commit()
     return jsonify(new_event)
@@ -89,19 +89,19 @@ def create_event():
 @app.route('/events', methods=['GET'])
 def get_events():
     session = Session()
-    events = session.query(Events).all()
+    events = session.query(Event).all()
     return jsonify(events)
 
 @app.route('/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
     session = Session()
-    event = session.query(Events).get(event_id)
+    event = session.query(Event).get(event_id)
     return jsonify(event)
 
 @app.route('/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
     session = Session()
-    event = session.query(Events).get(event_id)
+    event = session.query(Event).get(event_id)
     session.delete(event)
     session.commit()
     return jsonify(event)
@@ -111,7 +111,7 @@ def delete_event(event_id):
 def update_event(event_id):
     session = Session()
     data = request.get_json()
-    event = session.query(Events).get(event_id)
+    event = session.query(Event).get(event_id)
     event.event_name = data['event_name']
     event.event_description = data['event_description']
     event.event_date = data['event_date']
@@ -165,4 +165,4 @@ def update_user(user_id):
     session.commit()
     return jsonify(user)
 
-
+import app.routes.authorize

@@ -1,36 +1,62 @@
+from app.db.session import Session
+
+from typing import Optional
+
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Mapped
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer, String, select
 
 from datetime import datetime
+
+from argon2 import PasswordHasher
 
 class Model(DeclarativeBase):
     """The base model class. All models should inherit this class."""
 
     pass
 
-class Users(Model):
+class User(Model):
 
-    __tablename__ = 'users'
+    __tablename__ = 'user'
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    email: Mapped[str]
+    email: Mapped[str] = mapped_column(unique=True)
+    password_hash: Mapped[Optional[str]]
 
     first_name: Mapped[str]
     last_name: Mapped[str]
+
+    is_active: Mapped[bool] = mapped_column(default=True)
 
     # TODO: relationship to interests & clubs
 
     def init(self, email, first_name, last_name):
         self.email = email
+        self.password_hash = None
         self.first_name = first_name
         self.last_name = last_name
+        self.is_active = True
 
-class Clubs(Model):
+    def get_by_email(email):
+        """Get a user, given the email."""
+        session = Session()
+        return session.scalars(select(User).filter_by(email=email)).first()
 
-    __tablename__ = 'clubs'
+    def check_password(self, pw):
+        """Check that a password is correct for a user."""
+        ph = PasswordHasher()
+        return ph.verify(self.password_hash, pw)
+
+    def set_password(self, pw):
+        """Set the password for a user."""
+        ph = PasswordHasher()
+        self.password_hash = ph.hash(pw)
+
+class Club(Model):
+
+    __tablename__ = 'club'
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
@@ -45,9 +71,9 @@ class Clubs(Model):
         self.name = name
         self.description = description
 
-class Events(Model):
+class Event(Model):
 
-    __tablename__ = 'events'
+    __tablename__ = 'event'
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
