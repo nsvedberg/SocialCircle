@@ -2,13 +2,21 @@ import React, { useState, useContext } from "react";
 import './login.css' 
 import { AuthToken } from '../../App';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 
 const Login = () => {
   const { token, setToken } = useContext(AuthToken);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const navigate = useNavigate();
+
+  if (searchParams.get("token")) {
+    console.log(searchParams.get("token"));
+    setToken(searchParams.get("token"));
+    navigate('/dashboard');
+  }
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -61,11 +69,11 @@ const Login = () => {
           {error && <p style={{ color: "red" }}>{error}</p>}
           <button type="submit">Log In</button>
           <a className="btn-oauth" href="/b/authorize/google">
-            <img class="oauth-icon" src="google-oauth.png"></img>
+            <img class="oauth-icon" src="/google-oauth.png"></img>
             Sign in with Google
           </a>
           <a className="btn-oauth" href="/b/authorize/github">
-            <img class="oauth-icon" src="github-oauth.png"></img>
+            <img class="oauth-icon" src="/github-oauth.png"></img>
             Sign in with GitHub
           </a>
           <p>

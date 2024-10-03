@@ -13,6 +13,23 @@ import jwt
 from os import getenv
 
 import datetime
+import requests
+
+def encode_token(user_id):
+    # token should expire after 24 hrs
+    expiration_time = datetime.datetime.utcnow() + datetime.timedelta(days=1)
+
+    return jwt.encode(
+        {"user_id": user_id, "exp": expiration_time},
+        app.secret_key,
+        algorithm="HS256"
+    )
+
+def decode_token():
+    data=jwt.decode(token, app.secret_key, algorithms=["HS256"],
+                    options={"require": ["exp"]})
+
+    return data["user_id"]
 
 def login_required(f):
     """
@@ -33,8 +50,7 @@ def login_required(f):
             }, 401
         try:
             # Decode the token.
-            data=jwt.decode(token, app.secret_key, algorithms=["HS256"],
-                            options={"require": ["exp"]})
+            user_id = decode_token(token)
 
             # Get the user specified in the token.
             current_user=session.get(User, data["user_id"])
@@ -88,14 +104,7 @@ def login():
 
         if user and user.check_password(password):
             try:
-                # token should expire after 24 hrs
-                expiration_time = datetime.datetime.utcnow() + datetime.timedelta(days=1)
-
-                token = jwt.encode(
-                    {"user_id": user.id, "exp": expiration_time},
-                    app.secret_key,
-                    algorithm="HS256"
-                )
+                token = encode_token(user.id)
                 return {
                     "message": "Successfully fetched auth token",
                     "data": token
@@ -233,6 +242,7 @@ def oauth2_callback(provider):
         session.add(user)
         session.commit()
 
+    token = encode_token(user.id)
+
     # Log the user in.
-    login_user(user)
-    return redirect(url_for('index'))
+    return redirect('/login?token=' + token)
