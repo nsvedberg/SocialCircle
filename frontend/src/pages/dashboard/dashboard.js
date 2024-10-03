@@ -36,7 +36,7 @@ const Dashboard = () => {
             <div key={index} className="club-card">
               <h2>{club.club_name}</h2>
               <p>Members: {club.Members}</p>
-              <a href={club.Link} target="_blank" rel="noopener noreferrer">Visit Club</a>
+              <a href={`/club/${club.id}`} rel="noopener noreferrer">Visit Club</a>
             </div>
           ))
         ) : (

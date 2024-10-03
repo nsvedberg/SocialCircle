@@ -23,7 +23,7 @@ def create_club():
     session.commit()
     # Type Club can't be JSON serialized so I'm converting to a dict
     club_dict = {
-        #'id': new_club.id, 
+        'id': new_club.id, 
         'club_name': new_club.name,
         'club_description': new_club.description,
         #'club_president': new_club.club_president,
@@ -41,6 +41,7 @@ def get_clubs():
     clubs_list = []
     for club in clubs:
         club_dict = {
+            'id' : club.id,
             'club_name': club.name,
             'club_description': club.description
         }

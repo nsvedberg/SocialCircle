@@ -32,6 +32,7 @@ const CreateClub = () => {
             body: JSON.stringify(data)
         }
         const response = await fetch(url, options)
+
         if (response.status !== 201 && response.status !== 200) {
             const data = await response.json()
             alert(data.message)
