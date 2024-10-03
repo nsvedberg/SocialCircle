@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Nav from '../../components/nav/nav';
+import { Link } from 'react-router-dom';
 import './createClub.css';
 
 const CreateClub = () => {
@@ -102,7 +103,9 @@ const CreateClub = () => {
                 onChange={(e) => setClubMembers(e.target.value)}>
             </input>
         </div>
-        <button type ="submit">Create Club</button>
+        <Link to="/dashboard">
+            <button type ="submit">Create Club</button>
+        </Link>
     </form>
 };
 
