@@ -52,7 +52,12 @@ def get_clubs():
 def get_club(club_id):
     session = Session()
     club = session.query(Club).get(club_id)
-    return jsonify(club)
+    club_dict = {
+        'id': club.id,
+        'club_name': club.name,
+        'club_description': club.description,
+    }
+    return jsonify(club_dict)
 
 @app.route('/clubs/<int:club_id>', methods=['DELETE'])
 def delete_club(club_id):
