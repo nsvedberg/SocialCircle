@@ -90,3 +90,4 @@ class Event(Model):
         self.description = description
         self.when = when
         self.description = description
+        self.location = location

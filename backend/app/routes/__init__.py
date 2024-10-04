@@ -128,6 +128,22 @@ def update_event(event_id):
     session.commit()
     return jsonify(event)
 
+@app.route('events/search', methods=['GET'])
+def search_events():
+    date = request.args.get('date')
+    session = Session()
+    events = session.query(Event).filter(Event.when == date).all()
+    events_list = []
+    for event in events:
+        events_list.append({
+            'id' : event.id,
+            'event_name': event.name,
+            'event_date': event.when,
+            'event_description': event.description
+        })
+
+    return jsonify(events_list)
+
 #TODO: update this route to reflect the final database relationships
 @app.route('/users/new', methods=['POST'])
 def create_user():
@@ -170,5 +186,7 @@ def update_user(user_id):
     user.user_interests = data['user_interests']
     session.commit()
     return jsonify(user)
+
+
 
 import app.routes.authorize
