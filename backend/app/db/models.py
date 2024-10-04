@@ -58,7 +58,7 @@ class Club(Model):
 
     __tablename__ = 'club'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
     name: Mapped[str]
     description: Mapped[str]

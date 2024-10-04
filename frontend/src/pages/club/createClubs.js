@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Nav from '../../components/nav/nav';
 import './createClub.css';
+import { useNavigate } from "react-router-dom";
 
 const CreateClub = () => {
     const [clubName, setClubName] = useState('');
@@ -10,7 +11,8 @@ const CreateClub = () => {
     const [clubTags, setClubTags] = useState('');
     const [clubMembers, setClubMembers] = useState('');    
 
-    const submit = async (e) => {
+    const Submit = async (e) => {
+        let navigate = useNavigate()
         e.preventDefault()
 
         const data = {
@@ -34,7 +36,7 @@ const CreateClub = () => {
             const data = await response.json()
             alert(data.message)
         } else {
-
+            navigate('/dashboard')
         }
     };
 
@@ -47,7 +49,7 @@ const CreateClub = () => {
         club_members: clubMembers,
     };
 
-    return <form onSubmit={submit}>
+    return <form onSubmit={Submit}>
         <div>
             <label htmlFor="clubName">Club Name</label>
             <input
@@ -102,7 +104,7 @@ const CreateClub = () => {
                 onChange={(e) => setClubMembers(e.target.value)}>
             </input>
         </div>
-        <button type ="submit">Create Club</button>
+        <button type ="Submit">Create Club</button>
     </form>
 };
 
