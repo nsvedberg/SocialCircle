@@ -23,7 +23,7 @@ def create_club():
     session.commit()
     # Type Club can't be JSON serialized so I'm converting to a dict
     club_dict = {
-        #'id': new_club.id, 
+        'id': new_club.id, 
         'club_name': new_club.name,
         'club_description': new_club.description,
         #'club_president': new_club.club_president,
@@ -41,6 +41,7 @@ def get_clubs():
     clubs_list = []
     for club in clubs:
         club_dict = {
+            'id' : club.id,
             'club_name': club.name,
             'club_description': club.description
         }
@@ -51,7 +52,12 @@ def get_clubs():
 def get_club(club_id):
     session = Session()
     club = session.query(Club).get(club_id)
-    return jsonify(club)
+    club_dict = {
+        'id': club.id,
+        'club_name': club.name,
+        'club_description': club.description,
+    }
+    return jsonify(club_dict)
 
 @app.route('/clubs/<int:club_id>', methods=['DELETE'])
 def delete_club(club_id):
