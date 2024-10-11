@@ -1,0 +1,27 @@
+.create-club-form {
+    padding: 50px;
+}
+
+.form-group {
+    margin-bottom: 16px; /* Adjust spacing between input fields */
+}
+
+.form-input {
+    width: 100%; /* Full width for inputs */
+    padding: 8px; /* Padding for inputs */
+    border: 1px solid #ccc; /* Border style */
+    border-radius: 4px; /* Rounded corners */
+}
+
+.create-club-button {
+    background-color: #4CAF50; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding for button */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+}
+
+.create-club-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
