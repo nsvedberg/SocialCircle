@@ -1,0 +1,15 @@
+.create-button{
+    background-color: #166E46;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+.button-container{
+    display: flex;
+    align-items: center;
+    
+}
