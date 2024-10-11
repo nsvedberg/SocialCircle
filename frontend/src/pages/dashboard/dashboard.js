@@ -2,6 +2,9 @@ import { useState, useEffect, useContext } from 'react';
 import Nav from '../../components/nav/nav';
 import './dashboard.css';
 import { AuthToken } from '../../App';
+import { useNavigate } from "react-router-dom";
+import CreateButton from '../../components/create/create';
+
 
 const Dashboard = () => {
   const { token, setToken } = useContext(AuthToken);
@@ -26,7 +29,7 @@ const Dashboard = () => {
 
   return (
     <div className='body'>
-      <h1>Clubs</h1>
+      <CreateButton />
       <Nav />
       
       {/* Display the clubs in cards */}

@@ -19,8 +19,6 @@ def create_club():
         #club_tags=data['club_tags'], 
         #club_members=data['club_members']
     )
-    session.add(new_club)
-    session.commit()
     # Type Club can't be JSON serialized so I'm converting to a dict
     club_dict = {
         'id': new_club.id, 
@@ -31,6 +29,8 @@ def create_club():
         #'club_tags': new_club.club_tags,
         #'club_members': new_club.club_members
     }
+    session.add(new_club)
+    session.commit()
     return jsonify(club_dict)
 
 @app.route('/clubs', methods=['GET'])
