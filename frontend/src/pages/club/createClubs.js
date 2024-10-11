@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Nav from '../../components/nav/nav';
 import './createClub.css';
 import { useNavigate } from "react-router-dom";
@@ -9,11 +9,11 @@ const CreateClub = () => {
     const [clubPresident, setClubPresident] = useState('');
     const [clubEmail, setClubEmail] = useState('');
     const [clubTags, setClubTags] = useState('');
-    const [clubMembers, setClubMembers] = useState('');    
+    const [clubMembers, setClubMembers] = useState('');  
+    const navigate = useNavigate();  
 
-    const Submit = async (e) => {
-        let navigate = useNavigate()
-        e.preventDefault()
+    const submit = async (e) => {
+        e.preventDefault();
 
         const data = {
             club_name: clubName,
@@ -22,34 +22,32 @@ const CreateClub = () => {
             club_email: clubEmail,
             club_tags: clubTags,
             club_members: clubMembers,
-        }
-        const url = "http://127.0.0.1:5000/clubs/new"
+        };
+
+        const url = "http://127.0.0.1:5000/clubs/new";
         const options = {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
-        }
-        const response = await fetch(url, options)
-        if (response.status !== 201 && response.status !== 200) {
-            const data = await response.json()
-            alert(data.message)
-        } else {
-            navigate('/dashboard')
+        };
+
+        try {
+            const response = await fetch(url, options);
+            if (response.status !== 201 && response.status !== 200) {
+                const responseData = await response.json();
+                alert(responseData.message);
+            } else {
+                navigate('/dashboard');
+            }
+        } catch (error) {
+            console.error('Error submitting the form:', error);
+            alert('Could not create the club. Please try again.');
         }
     };
 
-    const newClub = {
-        club_name: clubName,
-        club_description: clubDescription,
-        club_president: clubPresident,
-        club_email: clubEmail,
-        club_tags: clubTags,
-        club_members: clubMembers,
-    };
-
-    return <form onSubmit={Submit}>
+    return <form onSubmit={submit}>
         <div>
             <label htmlFor="clubName">Club Name</label>
             <input
@@ -104,7 +102,7 @@ const CreateClub = () => {
                 onChange={(e) => setClubMembers(e.target.value)}>
             </input>
         </div>
-        <button type ="Submit">Create Club</button>
+        <button type ="submit">Create Club</button>
     </form>
 };
 
