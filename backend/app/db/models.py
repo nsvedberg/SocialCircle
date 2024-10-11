@@ -90,3 +90,23 @@ class Event(Model):
         self.description = description
         self.when = when
         self.description = description
+
+# Comment model, commented for now (ironic lol) until I can test it when the single club page is built
+'''
+class Comment(Model):
+    __tablename__ = 'comments'
+    comment_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    comment: Mapped[str]
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
+    club_id: Mapped[int] = mapped_column(Integer, ForeignKey('club.id'))
+
+    # Add similar relationships to the Club and User sections
+    user = relationship("User", back_populates='comments')
+    club = relationship("Club", back_populates='comments')
+    
+    def init(self, comment, user_id, club_id):
+        self.comment = comment
+        self.user_id = user_id
+        self.club_id = club_id
+
+'''
