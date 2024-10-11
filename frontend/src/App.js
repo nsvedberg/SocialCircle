@@ -20,6 +20,8 @@ function App() {
       <AuthToken.Provider value={{ token: token, setToken: setToken }}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/clubs/new" element={<CreateClub />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
