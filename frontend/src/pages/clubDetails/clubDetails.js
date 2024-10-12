@@ -7,6 +7,10 @@ const ClubDetails = () => {
     const { clubId } = useParams();
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
+    const [club_president, setPresident] = useState('');
+    const [club_email, setEmail] = useState('');
+    const [club_tags, setTags] = useState('');
+    const [club_members, setMembers] = useState('');
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
 
@@ -16,6 +20,10 @@ const ClubDetails = () => {
             const clubsData = await response.json();
             setName(clubsData.club_name);
             setDescription(clubsData.club_description);
+            setPresident(clubsData.club_president);
+            setEmail(clubsData.club_email);
+            setTags(clubsData.club_tags);
+            setMembers(clubsData.club_members);
         } catch {
             console.log("Error fetching club details");
         }
@@ -65,6 +73,10 @@ const ClubDetails = () => {
                 <Nav />
                 <h1>{club_name}</h1>
                 <h3>{club_description}</h3>
+                <p>President: {club_president}</p>
+                <p>Email: {club_email}</p>
+                <p>Tags: {club_tags}</p>
+                <p>Members: {club_members}</p>
             </div>
             <h4>Comments:</h4>
                 <ul>

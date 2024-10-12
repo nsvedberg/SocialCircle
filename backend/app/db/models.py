@@ -63,15 +63,23 @@ class Club(Model):
 
     name: Mapped[str]
     description: Mapped[str]
+    president: Mapped[str]
+    email: Mapped[str]
+    tags: Mapped[str]
+    members: Mapped[int]
 
     # TODO: relationship to user for president & other club admins
     # TODO: relationship to user for club members
     # TODO: relationship to interests
     comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="club")
 
-    def init(self, name, description):
+    def init(self, name, description, president, email, tags, members):
         self.name = name
         self.description = description
+        self.president = president
+        self.email = email
+        self.tags = tags
+        self.members = members
 
 class Event(Model):
 

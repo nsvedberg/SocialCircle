@@ -14,10 +14,10 @@ def create_club():
     new_club = Club(
         name=data['club_name'], 
         description=data['club_description'], 
-        #club_president=data['club_president'], Commented parts that haven't been added to the Club model yet.
-        #club_email=data['club_email'], 
-        #club_tags=data['club_tags'], 
-        #club_members=data['club_members']
+        president=data['club_president'],
+        email=data['club_email'], 
+        tags=data['club_tags'], 
+        members=data['club_members']
     )
     session.add(new_club)
     session.commit()
@@ -26,10 +26,10 @@ def create_club():
         'id': new_club.id, 
         'club_name': new_club.name,
         'club_description': new_club.description,
-        #'club_president': new_club.club_president,
-        #'club_email': new_club.club_email,
-        #'club_tags': new_club.club_tags,
-        #'club_members': new_club.club_members
+        'club_president': new_club.club_president,
+        'club_email': new_club.club_email,
+        'club_tags': new_club.club_tags,
+        'club_members': new_club.club_members
     }
     return jsonify(club_dict)
 
@@ -43,7 +43,11 @@ def get_clubs():
         club_dict = {
             'id' : club.id,
             'club_name': club.name,
-            'club_description': club.description
+            'club_description': club.description,
+            'club_president': club.club_president,
+            'club_email': club.club_email,
+            'club_tags': club.club_tags,
+            'club_members': club.club_members
         }
         clubs_list.append(club_dict)
     return jsonify(clubs_list)
