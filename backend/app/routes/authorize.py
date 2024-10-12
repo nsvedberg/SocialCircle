@@ -2,7 +2,7 @@ from app import app
 from app.db.session import Session
 from app.db.models import User
 
-from flask import current_app
+from flask import current_app, jsonify
 from flask import request, abort, redirect, url_for
 from functools import wraps
 
@@ -25,7 +25,7 @@ def encode_token(user_id):
         algorithm="HS256"
     )
 
-def decode_token():
+def decode_token(token):
     data=jwt.decode(token, app.secret_key, algorithms=["HS256"],
                     options={"require": ["exp"]})
 
@@ -53,7 +53,7 @@ def login_required(f):
             user_id = decode_token(token)
 
             # Get the user specified in the token.
-            current_user=session.get(User, data["user_id"])
+            current_user=session.get(User, user_id)
 
             if current_user is None:
                 return {
@@ -126,11 +126,11 @@ def login():
         }, 500
 
 
-@app.route("/b/test-login")
+@app.route("/b/current-user")
 @login_required
-def test_login(user):
-    """Test that an authorization token works as expected."""
-    return { "message": "Logged in successfully." }
+def current_user(user):
+    """Returns the currently logged-in user."""
+    return jsonify(user)
 
 app.config['oauth2'] = {
     'github': {

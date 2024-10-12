@@ -9,14 +9,9 @@ import CreateButton from '../../components/create/create';
 const Dashboard = () => {
   const { token, setToken } = useContext(AuthToken);
   const [clubs, setClubs] = useState([]);
+  const [currentUser, setCurrentUser] = useState([]);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!token) {
-      navigate('/login');
-    }
-  }, []);
 
   // Fetch clubs from the backend
   const getClubs = async () => {
@@ -30,13 +25,37 @@ const Dashboard = () => {
     }
   };
 
+  const getCurrentUser = async () => {
+    try {
+      const data = await fetch("/b/current-user", {
+        headers: new Headers({
+            'Authorization': token,
+        }), 
+      });
+      const json = await data.json();
+      setCurrentUser(json);
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
+
   // Use useEffect to call getClubs when the component loads
   useEffect(() => {
+    if (!token) {
+      // TODO: require login on this page
+      // navigate('/login');
+    }
+
     getClubs();
+    getCurrentUser();
   }, []);
 
   return (
     <div className='body'>
+      <div className="login-banner">
+        Logged in as {currentUser.email}
+      </div>
+
       <CreateButton />
       <Nav />
       
