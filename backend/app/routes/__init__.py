@@ -18,7 +18,14 @@ def create_club():
 
 @app.route('/b/clubs', methods=['GET'])
 def get_all_clubs():
-    return Session().query(Club).all()
+    clubs = Session().query(Club).all()
+    return jsonify([
+        {
+            'id': club.id,
+            'club_name': club.name,
+            'club_description': club.description,
+        } for club in clubs
+    ])
 
 @app.route('/b/clubs/<int:club_id>', methods=['GET'])
 def get_club(club_id):
