@@ -24,7 +24,7 @@ const CreateClub = () => {
             club_members: clubMembers,
         };
 
-        const url = "http://127.0.0.1:5000/clubs/new";
+        const url = "/clubs/new";
         const options = {
             method: "POST",
             headers: {
