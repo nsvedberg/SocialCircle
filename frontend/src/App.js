@@ -15,7 +15,7 @@ import Search from "./pages/search/search";
 export const AuthToken = React.createContext(null);
 
 function App() {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState([]);
 
   return (
     <BrowserRouter> 
