@@ -19,6 +19,8 @@ def create_club():
         #club_tags=data['club_tags'], 
         #club_members=data['club_members']
     )
+    session.add(new_club)
+    session.commit()
     # Type Club can't be JSON serialized so I'm converting to a dict
     club_dict = {
         'id': new_club.id, 
@@ -29,8 +31,6 @@ def create_club():
         #'club_tags': new_club.club_tags,
         #'club_members': new_club.club_members
     }
-    session.add(new_club)
-    session.commit()
     return jsonify(club_dict)
 
 @app.route('/clubs', methods=['GET'])
@@ -128,7 +128,6 @@ def update_event(event_id):
     session.commit()
     return jsonify(event)
 
-# Test code
 #TODO: update this route to reflect the final database relationships
 @app.route('/users/new', methods=['POST'])
 def create_user():
@@ -144,7 +143,7 @@ def get_users():
     session = Session()
     users = session.query(Users).all()
     return jsonify(users)
-
+# Test comment
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     session = Session()
