@@ -1,11 +1,12 @@
 from app.db.session import Session
 
-from typing import Optional
+from typing import Optional, List
 
 from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
-from sqlalchemy import Integer, String, select
+from sqlalchemy import Integer, String, select, ForeignKey
+
 
 from datetime import datetime
 
@@ -66,6 +67,7 @@ class Club(Model):
     # TODO: relationship to user for president & other club admins
     # TODO: relationship to user for club members
     # TODO: relationship to interests
+    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="club")
 
     def init(self, name, description):
         self.name = name
@@ -90,3 +92,19 @@ class Event(Model):
         self.description = description
         self.when = when
         self.description = description
+
+# Comment model, commented for now (ironic lol) until I can test it when the single club page is built
+class Comment(Model):
+    __tablename__ = 'comments'
+    comment_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    comment: Mapped[str]
+    #user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
+    club_id: Mapped[int] = mapped_column(Integer, ForeignKey('club.id'))
+
+    # Add similar relationships to the Club and User sections
+    #user = relationship("User", back_populates='comments')
+    club = relationship("Club", back_populates='comments')
+    
+    def init(self, comment, club_id):
+        self.comment = comment
+        self.club_id = club_id
