@@ -1,3 +1,11 @@
+.login-banner {
+    padding: 0.5em 1em;
+    margin-bottom: 0;
+    font-size: 16px;
+    text-align: right;
+    border-bottom: 1px solid rgb(204, 204, 204);
+}
+
 /* dashboard.css */
 .clubs-container {
     display: flex;
