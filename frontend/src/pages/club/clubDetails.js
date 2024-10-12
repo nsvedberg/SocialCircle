@@ -35,7 +35,7 @@ const ClubDetails = () => {
     const addComment = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`/clubs/${clubId}/comments`, {
+            const response = await fetch(`/b/clubs/${clubId}/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
