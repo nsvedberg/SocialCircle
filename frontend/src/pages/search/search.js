@@ -1,7 +1,8 @@
 
 import { useState } from 'react';
 import './search.css';
-import Nav from '../../components/nav/nav';// Sample user data
+import Nav from '../../components/nav/nav';
+// Sample user data
 const users = [
     { name: 'Alice', info: 'Web Developer' },
     { name: 'Bob', info: 'Graphic Designer' },
