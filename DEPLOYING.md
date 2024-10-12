@@ -10,7 +10,7 @@ We will need the following packages:
 - uwsgi-plugin-python3
 
 On this server, the user/group www-data already exists. If it didn't exist, you
-could create it like so:
+could create it like this:
 
     # useradd -r www-data
 
