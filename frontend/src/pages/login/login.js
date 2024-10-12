@@ -37,6 +37,7 @@ const Login = () => {
 
     if (response.ok) {
       setToken(body.data);
+      localStorage.setItem('token', body.data);
       navigate('/dashboard');
     } else {
       setError(body.message);

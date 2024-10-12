@@ -14,7 +14,7 @@ import CreateEvent from "./pages/event/createEvent";
 export const AuthToken = React.createContext(null);
 
 function App() {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState([]);
 
   return (
     <BrowserRouter> 
