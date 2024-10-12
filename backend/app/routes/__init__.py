@@ -129,6 +129,7 @@ def update_event(event_id):
     session.commit()
     return jsonify(event)
 
+# Test code
 #TODO: update this route to reflect the final database relationships
 @app.route('/users/new', methods=['POST'])
 def create_user():
