@@ -69,11 +69,11 @@ const Login = () => {
           {error && <p style={{ color: "red" }}>{error}</p>}
           <button type="submit">Log In</button>
           <a className="btn-oauth" href="/b/authorize/google">
-            <img class="oauth-icon" src="/google-oauth.png"></img>
+            <img className="oauth-icon" src="/google-oauth.png"></img>
             Sign in with Google
           </a>
           <a className="btn-oauth" href="/b/authorize/github">
-            <img class="oauth-icon" src="/github-oauth.png"></img>
+            <img className="oauth-icon" src="/github-oauth.png"></img>
             Sign in with GitHub
           </a>
           <p>

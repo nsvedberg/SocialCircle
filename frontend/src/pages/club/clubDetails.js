@@ -74,7 +74,7 @@ const ClubDetails = () => {
                     ))}
                 </ul>
 
-                <form onSubmit={addComment}>
+                <form className="add-comment-form" onSubmit={addComment}>
                     <input
                         type="text"
                         value={newComment}

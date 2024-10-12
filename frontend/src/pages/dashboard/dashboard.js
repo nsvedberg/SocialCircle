@@ -10,6 +10,14 @@ const Dashboard = () => {
   const { token, setToken } = useContext(AuthToken);
   const [clubs, setClubs] = useState([]);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  }, []);
+
   // Fetch clubs from the backend
   const getClubs = async () => {
     try {
