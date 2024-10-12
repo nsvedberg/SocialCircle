@@ -19,7 +19,6 @@ return(
         <div className= 'search-bar'  >
         <input type="text" placeholder="Search..">smile</input>
             </div>  
-        
     </div>
 
 )
