@@ -10,7 +10,6 @@ import Chatbot from './pages/message/Chatbot';
 import CreateClub from './pages/club/createClub';
 import ClubDetails from './pages/club/clubDetails';
 import CreateEvent from "./pages/event/createEvent";
-import Search from "./pages/search/search";
 
 export const AuthToken = React.createContext(null);
 
@@ -31,7 +30,6 @@ function App() {
           <Route path="/chat/:chatId" element={<Chatbot />} />
           <Route path="/messages" element={<ChatList />} />
           <Route path="/club/:clubId" element={<ClubDetails />} />
-          <Route path="/search" element={<Search />} />
         </Routes>
       </AuthToken.Provider>
     </BrowserRouter>
