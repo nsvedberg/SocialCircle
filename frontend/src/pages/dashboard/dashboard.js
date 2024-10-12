@@ -26,10 +26,12 @@ const Dashboard = () => {
   };
 
   const getCurrentUser = async () => {
+    const tok = localStorage.getItem('token');
+
     try {
       const data = await fetch("/b/current-user", {
         headers: new Headers({
-            'Authorization': token,
+            'Authorization': tok,
         }), 
       });
       const json = await data.json();
