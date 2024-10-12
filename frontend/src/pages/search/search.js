@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import './search.css';
 import Nav from '../../components/nav/nav';
+
+const Search = () => {
 // Sample user data
 const users = [
     { name: 'Alice', info: 'Web Developer' },
@@ -14,18 +16,10 @@ const users = [
 
 // Create search wrapper
 const searchWrapper = document.createElement('div');
-searchWrapper.style.marginBottom = '20px';
-
 // Create search input
 const searchInput = document.createElement('input');
 searchInput.type = 'text';
 searchInput.placeholder = 'Search...';
-searchInput.style.width = '100%';
-searchInput.style.padding = '10px';
-searchInput.style.border = '2px solid #007bff';
-searchInput.style.borderRadius = '5px';
-searchInput.style.fontSize = '16px';
-
 // Add focus effect
 searchInput.addEventListener('focus', () => {
     searchInput.style.borderColor = '#0056b3';
@@ -95,3 +89,15 @@ renderUserCards(users);
 
 // Attach event listener to the search input
 searchInput.addEventListener('input', filterUsers);
+
+return(
+    <div className = 'searchTitle'>
+        <h1>Search Page</h1>
+        <div className= 'search-bar'  >
+        <input type="text" placeholder="Search..">smile</input>
+            </div>  
+        
+    </div>
+
+)
+}
