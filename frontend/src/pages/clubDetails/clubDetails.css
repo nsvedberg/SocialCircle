@@ -12,6 +12,12 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+form {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
 h1 {
     font-size: 2.5rem;
     font-weight: bold;
@@ -58,8 +64,16 @@ button {
     position: relative;
     bottom: 0;
     margin: 0 auto; 
+    min-width: 100px;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+.form-input {
+    width: 100%; /* Full width for inputs */
+    padding: 8px; /* Padding for inputs */
+    border: 1px solid #ccc; /* Border style */
+    border-radius: 4px; /* Rounded corners */
 }
