@@ -6,49 +6,21 @@ from flask import Blueprint, abort, jsonify, request
 
 router = Blueprint('user', __name__, url_prefix='/user')
 
-#needs to be updated when relationships are finalized in the database
-@app.route('/clubs/new', methods=['POST'])
+@app.route('/b/clubs/new', methods=['POST'])
 def create_club():
     session = Session()
     data = request.get_json()
-    new_club = Club(
-        name=data['club_name'], 
-        description=data['club_description'], 
-        #club_president=data['club_president'], Commented parts that haven't been added to the Club model yet.
-        #club_email=data['club_email'], 
-        #club_tags=data['club_tags'], 
-        #club_members=data['club_members']
-    )
+    new_club = Club(name=data['club_name'],
+                    description=data['club_description'])
     session.add(new_club)
     session.commit()
-    # Type Club can't be JSON serialized so I'm converting to a dict
-    club_dict = {
-        'id': new_club.id, 
-        'club_name': new_club.name,
-        'club_description': new_club.description,
-        #'club_president': new_club.club_president,
-        #'club_email': new_club.club_email,
-        #'club_tags': new_club.club_tags,
-        #'club_members': new_club.club_members
-    }
-    return jsonify(club_dict)
+    return jsonify(new_club)
 
-@app.route('/clubs', methods=['GET'])
-def get_clubs():
-    session = Session()
-    clubs = session.query(Club).all()
-    # Conver Clubs to dicts before jsonify
-    clubs_list = []
-    for club in clubs:
-        club_dict = {
-            'id' : club.id,
-            'club_name': club.name,
-            'club_description': club.description
-        }
-        clubs_list.append(club_dict)
-    return jsonify(clubs_list)
+@app.route('/b/clubs', methods=['GET'])
+def get_all_clubs():
+    return Session().query(Club).all()
 
-@app.route('/clubs/<int:club_id>', methods=['GET'])
+@app.route('/b/clubs/<int:club_id>', methods=['GET'])
 def get_club(club_id):
     session = Session()
     club = session.query(Club).get(club_id)
@@ -59,17 +31,15 @@ def get_club(club_id):
     }
     return jsonify(club_dict)
 
-@app.route('/clubs/<int:club_id>', methods=['DELETE'])
+@app.route('/b/clubs/<int:club_id>', methods=['DELETE'])
 def delete_club(club_id):
     session = Session()
     club = session.query(Club).get(club_id)
     session.delete(club)
     session.commit()
-    return jsonify(club)
+    return club
 
-
-#TODO update this route to reflect the final database relationships
-@app.route('/clubs/<int:club_id>', methods=['PUT'])
+@app.route('/b/clubs/<int:club_id>', methods=['PUT'])
 def update_club(club_id):
     session = Session()
     data = request.get_json()
@@ -81,9 +51,9 @@ def update_club(club_id):
     club.club_tags = data['club_tags']
     club.club_members = data['club_members']
     session.commit()
-    return jsonify(club)
+    return club
 
-@app.route('/clubs/<int:club_id>/comments', methods=['POST'])
+@app.route('/b/clubs/<int:club_id>/comments', methods=['POST'])
 def add_comment(club_id):
     session = Session()
     data = request.get_json()
@@ -93,39 +63,45 @@ def add_comment(club_id):
         new_comment = Comment(comment=comment_text, club_id=club_id) 
         session.add(new_comment)
         session.commit()
-        return jsonify({'comment_id': new_comment.comment_id, 'comment': new_comment.comment}), 201
-    return jsonify({'error': 'Club not found'}), 404
+        return {'comment_id': new_comment.comment_id, 'comment': new_comment.comment}, 201
+    return {'error': 'Club not found'}, 404
 
-@app.route('/clubs/<int:club_id>/comments', methods=['GET'])
+@app.route('/b/clubs/<int:club_id>/comments', methods=['GET'])
 def get_comments(club_id):
     session = Session()
     comments = session.query(Comment).filter(Comment.club_id == club_id).all()
-    comments_list = [{'comment_id': comment.comment_id, 'comment': comment.comment} for comment in comments]
-    return jsonify(comments_list)
+    return [
+        {
+            'comment_id': comment.comment_id,
+            'comment': comment.comment
+        } for comment in comments
+    ]
 
-
-@app.route('/events/new', methods=['POST'])
+@app.route('/b/events/new', methods=['POST'])
 def create_event():
     session = Session()
     data = request.get_json()
-    new_event = Event(event_name=data['event_name'], event_description=data['event_description'], event_date=data['event_date'], event_time=data['event_time'], event_location=data['event_location'], event_club=data['event_club'], event_tags=data['event_tags'])
+    new_event = Event(event_name=data['event_name'],
+                      event_description=data['event_description'],
+                      event_date=data['event_date'],
+                      event_time=data['event_time'],
+                      event_location=data['event_location'],
+                      event_club=data['event_club'],
+                      event_tags=data['event_tags'])
     session.add(new_event)
     session.commit()
     return jsonify(new_event)
 
-@app.route('/events', methods=['GET'])
+@app.route('/b/events', methods=['GET'])
 def get_events():
-    session = Session()
-    events = session.query(Event).all()
-    return jsonify(events)
+    return Session().query(Event).all()
 
-@app.route('/events/<int:event_id>', methods=['GET'])
+@app.route('/b/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
-    session = Session()
-    event = session.query(Event).get(event_id)
+    event = Session().query(Event).get(event_id)
     return jsonify(event)
 
-@app.route('/events/<int:event_id>', methods=['DELETE'])
+@app.route('/b/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
     session = Session()
     event = session.query(Event).get(event_id)
@@ -133,8 +109,7 @@ def delete_event(event_id):
     session.commit()
     return jsonify(event)
 
- #TODO: update this route to reflect the final database relationships
-@app.route('/events/<int:event_id>', methods=['PUT'])
+@app.route('/b/events/<int:event_id>', methods=['PUT'])
 def update_event(event_id):
     session = Session()
     data = request.get_json()
@@ -149,41 +124,36 @@ def update_event(event_id):
     session.commit()
     return jsonify(event)
 
-#TODO: update this route to reflect the final database relationships
-@app.route('/users/new', methods=['POST'])
+@app.route('/b/users/new', methods=['POST'])
 def create_user():
     session = Session()
     data = request.get_json()
-    new_user = Users(user_name=data['user_name'], user_email=data['user_email'], user_clubs=data['user_clubs'], user_interests=data['user_interests'])
+    new_user = User(user_name=data['user_name'], user_email=data['user_email'], user_clubs=data['user_clubs'], user_interests=data['user_interests'])
     session.add(new_user)
     session.commit()
     return jsonify(new_user)
 
-@app.route('/users', methods=['GET'])
-def get_users():
-    session = Session()
-    users = session.query(Users).all()
-    return jsonify(users)
-@app.route('/users/<int:user_id>', methods=['GET'])
-def get_user(user_id):
-    session = Session()
-    user = session.query(Users).get(user_id)
-    return jsonify(user)
+@app.route('/b/users', methods=['GET'])
+def get_all_users():
+    return Session().query(User).all()
 
-@app.route('/users/<int:user_id>', methods=['DELETE'])
+@app.route('/b/users/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    return jsonify(Session().query(User).get(user_id))
+
+@app.route('/b/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
     session = Session()
-    user = session.query(Users).get(user_id)
+    user = session.query(User).get(user_id)
     session.delete(user)
     session.commit()
     return jsonify(user)
 
-#TODO: update this route to reflect the final database relationships
-@app.route('/users/<int:user_id>', methods=['PUT'])
+@app.route('/b/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     session = Session()
     data = request.get_json()
-    user = session.query(Users).get(user_id)
+    user = session.query(User).get(user_id)
     user.user_name = data['user_name']
     user.user_email = data['user_email']
     user.user_clubs = data['user_clubs']

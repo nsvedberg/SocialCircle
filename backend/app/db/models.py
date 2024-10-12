@@ -7,16 +7,25 @@ from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy import DateTime, Integer, String, select, ForeignKey
 
+from argon2 import PasswordHasher
+
+from dataclasses import dataclass
 
 from datetime import datetime
 
-from argon2 import PasswordHasher
+from sqlalchemy import Integer, String, select, ForeignKey
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column, relationship
+
+from typing import Optional, List
 
 class Model(DeclarativeBase):
     """The base model class. All models should inherit this class."""
 
     pass
 
+@dataclass
 class User(Model):
 
     __tablename__ = 'user'
@@ -55,6 +64,7 @@ class User(Model):
         ph = PasswordHasher()
         self.password_hash = ph.hash(pw)
 
+@dataclass
 class Club(Model):
 
     __tablename__ = 'club'
@@ -73,6 +83,7 @@ class Club(Model):
         self.name = name
         self.description = description
 
+@dataclass
 class Event(Model):
 
     __tablename__ = 'event'
@@ -81,14 +92,22 @@ class Event(Model):
     event_name: Mapped[str] = mapped_column(String(255), nullable=False)
     event_description: Mapped[str] = mapped_column(String(500), nullable=False)
     event_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    event_time: Mapped[str] = mapped_column(String(10), nullable=False)  # Assuming time is handled as a string like "12:30 PM"
+
+    # Assuming time is handled as a string like "12:30 PM"
+    event_time: Mapped[str] = mapped_column(String(10), nullable=False)
+    
     event_location: Mapped[str] = mapped_column(String(255), nullable=False)
-    event_club: Mapped[str] = mapped_column(String(255), nullable=True)  # Can be optional if not supplied yet
-    event_tags: Mapped[str] = mapped_column(String(255), nullable=True)  # Assuming tags are a comma-separated string for now
+
+    # Can be optional if not supplied yet
+    event_club: Mapped[str] = mapped_column(String(255), nullable=True)  
+
+    # Assuming tags are a comma-separated string for now
+    event_tags: Mapped[str] = mapped_column(String(255), nullable=True)  
 
     # TODO: relationship to club, tags, etc...
 
-    def __init__(self, event_name, event_description, event_date, event_time, event_location, event_club=None, event_tags=None):
+    def __init__(self, event_name, event_description, event_date, event_time,
+                 event_location, event_club=None, event_tags=None):
         self.event_name = event_name
         self.event_description = event_description
         self.event_date = event_date
@@ -98,6 +117,7 @@ class Event(Model):
         self.event_tags = event_tags
         
 # Comment model, commented for now (ironic lol) until I can test it when the single club page is built
+@dataclass
 class Comment(Model):
     __tablename__ = 'comments'
     comment_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)

@@ -24,7 +24,7 @@ const CreateClub = () => {
             club_members: clubMembers,
         };
 
-        const url = "/clubs/new";
+        const url = "/b/clubs/new";
         const options = {
             method: "POST",
             headers: {
