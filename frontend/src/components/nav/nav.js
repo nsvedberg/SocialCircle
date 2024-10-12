@@ -21,7 +21,7 @@ const nav = () => {
             <span role="img" aria-label="profile">👤</span>
             <p>Profile</p>
           </Link>
-          <input type="text" placeholder="Search........"></input>
+          <input type="text" placeholder="Search......"></input>
         </nav>
       );
 }
