@@ -1,13 +1,12 @@
 from app import app
 from app.db.session import Session
-from app.db.models import Club, Event, User
+from app.db.models import Club, Event, User, Comment
 
 from flask import Blueprint, abort, jsonify, request
 
 router = Blueprint('user', __name__, url_prefix='/user')
-# Test comment for hw
+
 #needs to be updated when relationships are finalized in the database
-# test for push
 @app.route('/clubs/new', methods=['POST'])
 def create_club():
     session = Session()
@@ -84,6 +83,27 @@ def update_club(club_id):
     session.commit()
     return jsonify(club)
 
+@app.route('/clubs/<int:club_id>/comments', methods=['POST'])
+def add_comment(club_id):
+    session = Session()
+    data = request.get_json()
+    comment_text = data.get('comment')
+    club = session.query(Club).get(club_id)
+    if club is not None:
+        new_comment = Comment(comment=comment_text, club_id=club_id) 
+        session.add(new_comment)
+        session.commit()
+        return jsonify({'comment_id': new_comment.comment_id, 'comment': new_comment.comment}), 201
+    return jsonify({'error': 'Club not found'}), 404
+
+@app.route('/clubs/<int:club_id>/comments', methods=['GET'])
+def get_comments(club_id):
+    session = Session()
+    comments = session.query(Comment).filter(Comment.club_id == club_id).all()
+    comments_list = [{'comment_id': comment.comment_id, 'comment': comment.comment} for comment in comments]
+    return jsonify(comments_list)
+
+
 @app.route('/events/new', methods=['POST'])
 def create_event():
     session = Session()
@@ -144,7 +164,6 @@ def get_users():
     session = Session()
     users = session.query(Users).all()
     return jsonify(users)
-# Test comment
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     session = Session()
