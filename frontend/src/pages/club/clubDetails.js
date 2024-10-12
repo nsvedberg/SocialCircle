@@ -24,7 +24,7 @@ const ClubDetails = () => {
 
     const getComments = async () => {
         try {
-            const response = await fetch(`/clubs/${clubId}/comments`);
+            const response = await fetch(`/b/clubs/${clubId}/comments`);
             const commentsData = await response.json();
             setComments(commentsData);
         } catch {
