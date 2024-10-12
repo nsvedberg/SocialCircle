@@ -26,7 +26,7 @@ const CreateEvent = () => {
             event_tags: eventTags,
         };
 
-        const url = "/events/new";
+        const url = "/b/events/new";
         const options = {
             method: "POST",
             headers: {
