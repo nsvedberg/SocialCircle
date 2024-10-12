@@ -11,9 +11,10 @@ const ClubDetails = () => {
     const [newComment, setNewComment] = useState('');
 
     const getClubDetails = async () => {
-        try {
-            const response = await fetch(`/clubs/${clubId}`);
-            const clubsData = await response.json();
+        try{
+            const data = await fetch(`/b/clubs/${clubId}`);
+            const clubsData = await data.json();
+
             setName(clubsData.club_name);
             setDescription(clubsData.club_description);
         } catch {
