@@ -11,8 +11,38 @@ const Dashboard = () => {
   const [clubs, setClubs] = useState([]);
   const [currentUser, setCurrentUser] = useState([]);
 
+  const [searchTerm, setSearchTerm] = useState('');
+
+ 
+
   const navigate = useNavigate();
 
+  const handleInputChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleSearch = async () => {
+    try {
+      const data = await fetch(`/b/clubs/name/${searchTerm}`);
+      const clubData = await data.json();
+  
+      // If the backend returns a single club object, convert it to an array
+      if (clubData) {
+        setClubs([clubData]);
+      } else {
+        setClubs([]); // Clear the clubs array if no club is found
+      }
+      console.log(clubData);
+    } catch (error) {
+      console.error('Error searching for club:', error);
+      setClubs([]); // In case of error, clear the clubs array
+    }
+  };
+
+  const clearBar = async () => {
+    setSearchTerm("")
+    getClubs()
+  }
   // Fetch clubs from the backend
   const getClubs = async () => {
     try {
@@ -51,10 +81,34 @@ const Dashboard = () => {
   }, []);
 
   return (
+    
     <div className='body'>
+
+
+
       <div className="login-banner">
         Logged in as {currentUser.email}
+
+        <div className="search-container">
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={handleInputChange}
+        placeholder="Search..."
+        className="search-bar"
+      />
+      <button onClick={handleSearch} className="search-button">
+        Search
+      </button>
+
+      <button onClick={clearBar} className="clear-button">
+        Clear
+      </button>
+    </div>
+        
       </div>
+
+      
 
       <CreateButton />
       <Nav />
