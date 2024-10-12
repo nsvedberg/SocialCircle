@@ -5,7 +5,7 @@ from app.db.models import Club, Event, User
 from flask import Blueprint, abort, jsonify, request
 
 router = Blueprint('user', __name__, url_prefix='/user')
-
+# Test comment for hw
 #needs to be updated when relationships are finalized in the database
 # test for push
 @app.route('/clubs/new', methods=['POST'])
@@ -20,6 +20,8 @@ def create_club():
         #club_tags=data['club_tags'], 
         #club_members=data['club_members']
     )
+    session.add(new_club)
+    session.commit()
     # Type Club can't be JSON serialized so I'm converting to a dict
     club_dict = {
         'id': new_club.id, 
@@ -30,8 +32,6 @@ def create_club():
         #'club_tags': new_club.club_tags,
         #'club_members': new_club.club_members
     }
-    session.add(new_club)
-    session.commit()
     return jsonify(club_dict)
 
 @app.route('/clubs', methods=['GET'])
@@ -144,7 +144,7 @@ def get_users():
     session = Session()
     users = session.query(Users).all()
     return jsonify(users)
-
+# Test comment
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     session = Session()

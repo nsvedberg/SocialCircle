@@ -1,0 +1,14 @@
+# /etc/systemd/system/socialcircle.service
+[Unit]
+Description=SocialCircle (uWSGI app)
+
+[Service]
+ExecStart=/usr/bin/uwsgi --ini /etc/uwsgi/apps-available/socialcircle.ini
+User=www-socialcircle
+Group=www-data
+DynamicUser=yes
+RuntimeDirectory=socialcircle
+LogsDirectory=socialcircle
+EnvironmentFile=/etc/socialcircle/socialcircle.env
+KillSignal=SIGQUIT
+Type=notify
