@@ -5,7 +5,7 @@ from typing import Optional, List
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import Mapped
-from sqlalchemy import Integer, String, select, ForeignKey
+from sqlalchemy import DateTime, Integer, String, select, ForeignKey
 
 
 from datetime import datetime
@@ -78,21 +78,25 @@ class Event(Model):
     __tablename__ = 'event'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-
-    name: Mapped[str]
-    description: Mapped[str]
-
-    when: Mapped[datetime]
-    location: Mapped[str]
+    event_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    event_description: Mapped[str] = mapped_column(String(500), nullable=False)
+    event_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    event_time: Mapped[str] = mapped_column(String(10), nullable=False)  # Assuming time is handled as a string like "12:30 PM"
+    event_location: Mapped[str] = mapped_column(String(255), nullable=False)
+    event_club: Mapped[str] = mapped_column(String(255), nullable=True)  # Can be optional if not supplied yet
+    event_tags: Mapped[str] = mapped_column(String(255), nullable=True)  # Assuming tags are a comma-separated string for now
 
     # TODO: relationship to club, tags, etc...
 
-    def init(self, name, description, when, location):
-        self.name = name
-        self.description = description
-        self.when = when
-        self.description = description
-
+    def __init__(self, event_name, event_description, event_date, event_time, event_location, event_club=None, event_tags=None):
+        self.event_name = event_name
+        self.event_description = event_description
+        self.event_date = event_date
+        self.event_time = event_time
+        self.event_location = event_location
+        self.event_club = event_club
+        self.event_tags = event_tags
+        
 # Comment model, commented for now (ironic lol) until I can test it when the single club page is built
 class Comment(Model):
     __tablename__ = 'comments'

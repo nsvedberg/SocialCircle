@@ -9,6 +9,7 @@ import ChatList from './pages/chatList/ChatList';
 import Chatbot from './pages/message/Chatbot';
 import CreateClub from './pages/club/createClubs';
 import ClubDetails from './pages/clubDetails/clubDetails';
+import CreateEvent from "./pages/event/createEvent";
 
 export const AuthToken = React.createContext(null);
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/clubs/new" element={<CreateClub />} />
+          <Route path="/events/new" element={<CreateEvent />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
