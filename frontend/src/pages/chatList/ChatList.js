@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './ChatList.css';
+import Nav from '../../components/nav/nav';
 
 const ChatList = () => {
   // Example chats data
@@ -13,6 +14,7 @@ const ChatList = () => {
 
   return (
     <div className='chat-list'>
+      <Nav />
       <h1>Messages</h1>
       <ul>
         {chats.map(chat => (
