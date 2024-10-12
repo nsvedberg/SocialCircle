@@ -27,6 +27,24 @@ def get_all_clubs():
         } for club in clubs
     ])
 
+@app.route('/b/clubs/name/<string:club_name>', methods=['GET'])
+def get_club_by_name(club_name):
+    session = Session()
+    # Query the club by name
+    club = session.query(Club).filter_by(name=club_name).first()
+
+    if club is None:
+        return jsonify({'error': 'Club not found'}), 404
+
+    club_dict = {
+        'id': club.id,
+        'club_name': club.name,
+        'club_description': club.description,
+    }
+    
+    return jsonify(club_dict)
+
+
 @app.route('/b/clubs/<int:club_id>', methods=['GET'])
 def get_club(club_id):
     session = Session()
