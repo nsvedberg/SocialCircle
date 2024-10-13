@@ -11,7 +11,7 @@ from os import getenv
 DATABASE_URL = getenv("DATABASE_URL")
 
 # By using this file, we can create a launcher for connections to the database.
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, pool_size=20, max_overflow=10)
 
 
 def init_db():
