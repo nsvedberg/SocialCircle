@@ -42,7 +42,7 @@ def login_required(f):
         # Get the token from the Authorization header.
         token = None
         if "Authorization" in request.headers:
-            token = request.headers["Authorization"]
+            token = request.headers["Authorization"].removeprefix("Bearer ")
         if not token:
             return {
                 "message": "Authentication Token is missing.",

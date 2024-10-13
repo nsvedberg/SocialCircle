@@ -1,19 +1,16 @@
 import { useState, useEffect, useContext } from 'react';
 import Nav from '../../components/nav/nav';
 import './dashboard.css';
-import { AuthToken } from '../../App';
+import { CurrentUser } from '../../App';
 import { useNavigate } from "react-router-dom";
 import CreateButton from '../../components/create/create';
-
+import UserBanner from '../../components/userBanner/userBanner';
 
 const Dashboard = () => {
-  const { token, setToken } = useContext(AuthToken);
+  const { currentUser, setCurrentUser } = useContext(CurrentUser);
   const [clubs, setClubs] = useState([]);
-  const [currentUser, setCurrentUser] = useState([]);
 
   const [searchTerm, setSearchTerm] = useState('');
-
- 
 
   const navigate = useNavigate();
 
@@ -48,69 +45,37 @@ const Dashboard = () => {
     try {
       const data = await fetch("/b/clubs");
       const clubsData = await data.json();
-      console.log(clubsData )
       setClubs(clubsData); // Assuming the data contains a Clubs array
     } catch (error) {
       console.error('Error fetching clubs:', error);
     }
   };
 
-  const getCurrentUser = async () => {
-    const tok = localStorage.getItem('token');
-
-    try {
-      const data = await fetch("/b/current-user", {
-        headers: new Headers({
-            'Authorization': tok,
-        }), 
-      });
-      const json = await data.json();
-      setCurrentUser(json);
-    } catch (error) {
-      console.error('Error fetching current user:', error);
-    }
-  };
-
   // Use useEffect to call getClubs when the component loads
   useEffect(() => {
-    if (!token) {
-      // TODO: require login on this page
-      // navigate('/login');
-    }
-
     getClubs();
-    getCurrentUser();
   }, []);
 
   return (
-    
     <div className='body'>
+      <UserBanner />
 
+      <div className="search-container">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleInputChange}
+          placeholder="Search..."
+          className="search-bar"
+        />
+        <button onClick={handleSearch} className="search-button">
+          Search
+        </button>
 
-
-      <div className="login-banner">
-        Logged in as {currentUser.email}
-
-        <div className="search-container">
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={handleInputChange}
-        placeholder="Search..."
-        className="search-bar"
-      />
-      <button onClick={handleSearch} className="search-button">
-        Search
-      </button>
-
-      <button onClick={clearBar} className="clear-button">
-        Clear
-      </button>
-    </div>
-        
+        <button onClick={clearBar} className="clear-button">
+          Clear
+        </button>
       </div>
-
-      
 
       <CreateButton />
       <Nav />
