@@ -48,7 +48,7 @@ h3 {
     }
 }
 
-button {
+.join-chat-btn {
     width: 20%;
     padding: 15px;
     font-size: 1.2rem;
@@ -65,7 +65,7 @@ button {
     min-width: 100px;
 }
 
-button:hover {
+.join-chat-btn:hover {
     background-color: #0056b3;
 }
 

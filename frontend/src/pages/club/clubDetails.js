@@ -85,7 +85,7 @@ const ClubDetails = () => {
                     />
                     <button type="submit">Submit</button>
                 </form>
-            <button>Join the group chat!</button>
+            <button className="join-chat-btn">Join the group chat!</button>
         </div>
     );
 };
