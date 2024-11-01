@@ -102,6 +102,16 @@ def get_comments(club_id):
         } for comment in comments
     ]
 
+@app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id, club_id):
+    session = Session()
+    comment = session.query(Comment).filter(Comment.comment_id == comment_id) # Getting the comment that matches the id wanted
+    data = request.get_json()
+    new_comment = data.get('comment')
+    # "comment.comment" represents the text in the model, here set the comment to the new one.
+    comment.comment = new_comment
+    session.commit()
+
 @app.route('/b/events/new', methods=['POST'])
 def create_event():
     session = Session()

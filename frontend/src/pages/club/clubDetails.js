@@ -9,6 +9,8 @@ const ClubDetails = () => {
     const [club_description, setDescription] = useState('');
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [editedComment, setEditedComment] = useState('')
+    const [editedCommentId, setEditedCommentId] = useState('')
 
     const getClubDetails = async () => {
         try{
@@ -55,6 +57,32 @@ const ClubDetails = () => {
         }
     };
 
+    const editComment = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`/b/clubs/${clubId}/comments/${editedCommentId}/edit`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment: editedComment }),
+        });
+
+        if (response.ok) {
+            const updatedComment = await response.json();
+            setComments(comments.map(comment =>
+                comment.comment_id === editedCommentId ? updatedComment : comment
+            ));
+            setEditedCommentId(null);
+            setEditedComment('');
+        } else {
+            console.log("Error editing comment");
+        }
+    } catch (error) {
+        console.log("Error editing comment:", error);
+    }
+    }
+
     useEffect(() => {
         getClubDetails();
         getComments();
@@ -68,23 +96,46 @@ const ClubDetails = () => {
                 <h3>{club_description}</h3>
             </div>
             <h4>Comments:</h4>
-                <ul>
-                    {comments.map((comment) => (
-                        <li key={comment.comment_id}>{comment.comment}</li>
-                    ))}
-                </ul>
+            <ul>
+                {comments.map((comment) => (
+                    <li key={comment.comment_id}>
+                        {editedCommentId === comment.comment_id ? (
+                            <form onSubmit={editComment}>
+                                <input
+                                    type="text"
+                                    value={editedComment}
+                                    onChange={(e) => setEditedComment(e.target.value)}
+                                    placeholder="Edit your comment"
+                                    required
+                                    className="form-input"
+                                />
+                                <button type="submit">Save</button>
+                                <button type="button" onClick={() => setEditedCommentId(null)}>Cancel</button>
+                            </form>
+                        ) : (
+                            <>
+                                <span>{comment.comment}</span>
+                                <button onClick={() => {
+                                    setEditedCommentId(comment.comment_id);
+                                    setEditedComment(comment.comment);
+                                }}>Edit</button>
+                            </>
+                        )}
+                    </li>
+                ))}
+            </ul>
 
-                <form className="add-comment-form" onSubmit={addComment}>
-                    <input
-                        type="text"
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Add a comment"
-                        required
-                        className="form-input"
-                    />
-                    <button type="submit">Submit</button>
-                </form>
+            <form className="add-comment-form" onSubmit={addComment}>
+                <input
+                    type="text"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Add a comment"
+                    required
+                    className="form-input"
+                />
+                <button type="submit">Submit</button>
+            </form>
             <button className="join-chat-btn">Join the group chat!</button>
         </div>
     );
