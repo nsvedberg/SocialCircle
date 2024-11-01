@@ -1,6 +1,7 @@
 from app import app
 from app.db.session import Session
 from app.db.models import Club, Event, User, Comment
+from sqlalchemy import like
 
 from flask import Blueprint, abort, jsonify, request
 
@@ -31,7 +32,7 @@ def get_all_clubs():
 def get_club_by_name(club_name):
     session = Session()
     # Query the club by name
-    club = session.query(Club).filter_by(name=club_name).first()
+    club = session.query(Club).filter(Club.name.like(f"%{club_name}%")).all()
 
     if club is None:
         return jsonify({'error': 'Club not found'}), 404
