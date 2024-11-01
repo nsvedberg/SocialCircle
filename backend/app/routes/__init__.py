@@ -60,9 +60,14 @@ def get_club(club_id):
 def delete_club(club_id):
     session = Session()
     club = session.query(Club).get(club_id)
+    club_dict = {
+        'id': club.id,
+        'club_name': club.name,
+        'club_description': club.description,
+    }
     session.delete(club)
     session.commit()
-    return club
+    return jsonify(club_dict)
 
 @app.route('/b/clubs/<int:club_id>', methods=['PUT'])
 def update_club(club_id):
