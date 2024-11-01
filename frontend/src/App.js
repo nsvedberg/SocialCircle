@@ -33,9 +33,21 @@ function App() {
               <Dashboard />
             </RequireAuth>
           } />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/chat/:chatId" element={<Chatbot />} />
-          <Route path="/messages" element={<ChatList />} />
+          <Route path="/profile" element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          } />
+          <Route path="/chat/:chatId" element={
+            <RequireAuth>
+              <Chatbot />
+            </RequireAuth>
+          } />
+          <Route path="/messages" element={
+            <RequireAuth>
+              <ChatList />
+            </RequireAuth>
+          } />
           <Route path="/club/:clubId" element={<ClubDetails />} />
         </Routes>
       </CurrentUser.Provider>

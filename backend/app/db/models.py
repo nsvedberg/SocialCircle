@@ -38,15 +38,19 @@ class User(Model):
     first_name: Mapped[str]
     last_name: Mapped[str]
 
+    interests: Mapped[str]
+    bio: Mapped[str]
+
     is_active: Mapped[bool] = mapped_column(default=True)
 
     # TODO: relationship to interests & clubs
 
-    def init(self, email, first_name, last_name):
+    def init(self, email, first_name, last_name, interests):
         self.email = email
         self.password_hash = None
         self.first_name = first_name
         self.last_name = last_name
+        self.interests = interests
         self.is_active = True
 
     def get_by_email(email):

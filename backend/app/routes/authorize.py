@@ -111,8 +111,8 @@ def login():
                 }
             except Exception as e:
                 return {
+                    "message": str(e),
                     "error": "Something went wrong",
-                    "message": str(e)
                 }, 500
         else:
             return {
@@ -121,8 +121,8 @@ def login():
             }, 404
     except Exception as e:
         return {
-                "message": "Something went wrong",
-                "error": str(e),
+                "message": str(e),
+                "error": "Something went wrong",
         }, 500
 
 
