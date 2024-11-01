@@ -4,5 +4,6 @@
 venv
 __pycache__/
 .DS_Store
-etc
 etc/socialcircle.conf
+etc/env
+
