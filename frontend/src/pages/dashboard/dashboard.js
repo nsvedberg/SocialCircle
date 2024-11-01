@@ -36,7 +36,7 @@ const Dashboard = () => {
           finalData.push(i);
         }
       }
-
+      setClubs([finalData])
       console.log(finalData);
     } catch (error) {
       console.error('Error searching for club:', error);
