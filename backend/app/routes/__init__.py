@@ -105,12 +105,13 @@ def get_comments(club_id):
 @app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id, club_id):
     session = Session()
-    comment = session.query(Comment).filter(Comment.comment_id == comment_id) # Getting the comment that matches the id wanted
+    comment = session.query(Comment).filter(Comment.comment_id == comment_id).first() # Getting the comment that matches the id wanted
     data = request.get_json()
     new_comment = data.get('comment')
-    # "comment.comment" represents the text in the model, here set the comment to the new one.
+    # "comment.comment" represents the text in the model, here we set the comment to the new one.
     comment.comment = new_comment
     session.commit()
+    return jsonify({"comment_id": comment.comment_id, "comment": comment.comment})
 
 @app.route('/b/events/new', methods=['POST'])
 def create_event():
