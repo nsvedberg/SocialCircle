@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import './profile.css';
 import Nav from '../../components/nav/nav';
+import { useCurrentUser } from '../../auth/useCurrentUser';
 
 const Profile = () => {
+  let { currentUser, setCurrentUser } = useCurrentUser();
+
+  console.log(currentUser);
+
   const [profile, setProfile] = useState({
     username: '',
     profilePicture: '',
@@ -34,10 +39,36 @@ const Profile = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission, e.g., send data to server
-    console.log('Profile updated:', profile);
+
+    const formData = new FormData(e.target);
+
+    const token = currentUser.token;
+
+    const response = await fetch("/b/users/" + currentUser.id, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(Object.fromEntries(formData)),
+    });
+
+    var body = await response.json();
+
+    if (response.ok) {
+      console.log("Successfully updated profile.");
+
+      body.token = currentUser.token;
+      setCurrentUser(body);
+
+    } else {
+      console.log("Error updating user " + currentUser.id, body.error);
+      console.log(body.message);
+
+      return null
+    }
   };
 
   return (
@@ -49,22 +80,36 @@ const Profile = () => {
           alt='Profile'
           className='profile-picture'
         />
-        <input
-          type='file'
-          accept='image/*'
-          onChange={handleImageChange}
-          className='file-input'
-        />
-        <h2>{profile.username || 'alanka'}</h2>
+        <h2>{profile.username}</h2>
       </div>
       <form onSubmit={handleSubmit} className='profile-form'>
         <div className='form-group'>
-          <label htmlFor='username'>Username:</label>
+          <label htmlFor='email'>Email:</label>
           <input
             type='text'
-            id='username'
-            name='username'
-            value={profile.username}
+            id='email'
+            name='email'
+            value={currentUser.email}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className='form-group'>
+          <label htmlFor='first-name'>First Name:</label>
+          <input
+            type='text'
+            id='first-name'
+            name='first_name'
+            value={currentUser.first_name}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className='form-group'>
+          <label htmlFor='last-name'>Last Name:</label>
+          <input
+            type='text'
+            id='last-name'
+            name='last_name'
+            value={currentUser.last_name}
             onChange={handleInputChange}
           />
         </div>
@@ -74,27 +119,7 @@ const Profile = () => {
             type='text'
             id='interests'
             name='interests'
-            value={profile.interests}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className='form-group'>
-          <label htmlFor='preferredClubTypes'>Preferred Club Types:</label>
-          <input
-            type='text'
-            id='preferredClubTypes'
-            name='preferredClubTypes'
-            value={profile.preferredClubTypes}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className='form-group'>
-          <label htmlFor='favoriteActivities'>Favorite Activities:</label>
-          <input
-            type='text'
-            id='favoriteActivities'
-            name='favoriteActivities'
-            value={profile.favoriteActivities}
+            value={currentUser.interests}
             onChange={handleInputChange}
           />
         </div>
@@ -103,7 +128,7 @@ const Profile = () => {
           <textarea
             id='bio'
             name='bio'
-            value={profile.bio}
+            value={currentUser.bio}
             onChange={handleInputChange}
           ></textarea>
         </div>
