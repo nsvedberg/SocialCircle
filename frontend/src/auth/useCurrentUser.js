@@ -4,7 +4,13 @@ import { Navigate, useLocation } from 'react-router-dom';
 export function useCurrentUser() {
   const getCurrentUser = () => {
     const str = sessionStorage.getItem('currentUser');
-    return JSON.parse(str);
+
+    if (str) {
+      //sessionStorage.setItem('currentUser', '');
+      return JSON.parse(str);
+    } else {
+      return null;
+    }
   };
 
   const [currentUser, setCurrentUser] = useState(getCurrentUser());
