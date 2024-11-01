@@ -6,12 +6,10 @@ from app.db.session import init_db
 
 from os import getenv
 
-if getenv("SCIRCLE_DEVELOP"):
-    app = Flask(__name__,
-                static_url_path=None,
-                static_folder="../../frontend/build")
-else:
-    app = Flask(__name__)
+if not getenv("SCIRCLE_DEVELOP"):
+    load_dotenv("/etc/socialcircle.conf")
+
+app = Flask(__name__)
 
 app.secret_key = getenv("FLASK_SECRET_KEY")
 
