@@ -7,10 +7,17 @@ from app.db.session import init_db
 
 from os import getenv
 
-# If you get a build error and index.html is being served, it's because this is different, move your .env file
 if not getenv("SCIRCLE_DEVELOP"):
     load_dotenv("/etc/socialcircle.conf")
 app = Flask(__name__)
+
+# I get a build error with the above code, even after relocating the env, so I am going to keep using this for now
+#if getenv("SCIRCLE_DEVELOP"):
+#    app = Flask(__name__,
+#                static_url_path=None,
+#                static_folder="../../frontend/build")
+#else:
+#    app = Flask(__name__)
 
 app.secret_key = getenv("FLASK_SECRET_KEY")
 
