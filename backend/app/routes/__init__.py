@@ -61,9 +61,14 @@ def get_club(club_id):
 def delete_club(club_id):
     session = Session()
     club = session.query(Club).get(club_id)
+    club_dict = {
+        'id': club.id,
+        'club_name': club.name,
+        'club_description': club.description,
+    }
     session.delete(club)
     session.commit()
-    return club
+    return jsonify(club_dict)
 
 @app.route('/b/clubs/<int:club_id>', methods=['PUT'])
 def update_club(club_id):
@@ -102,6 +107,17 @@ def get_comments(club_id):
             'comment': comment.comment
         } for comment in comments
     ]
+
+@app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id, club_id):
+    session = Session()
+    comment = session.query(Comment).filter(Comment.comment_id == comment_id).first() # Getting the comment that matches the id wanted
+    data = request.get_json()
+    new_comment = data.get('comment')
+    # "comment.comment" represents the text in the model, here we set the comment to the new one.
+    comment.comment = new_comment
+    session.commit()
+    return jsonify({"comment_id": comment.comment_id, "comment": comment.comment})
 
 @app.route('/b/events/new', methods=['POST'])
 def create_event():

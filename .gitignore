@@ -27,3 +27,5 @@ yarn-error.log*
 .venv
 venv
 __pycache__/
+etc
+etc/socialcircle.conf
