@@ -32,7 +32,7 @@ const Dashboard = () => {
       }
 
       for (i in clubData){
-        if(i.includes(searchTerm)){
+        if(clubData.club_name.includes(searchTerm)){
           finalData.push(i);
         }
       }
