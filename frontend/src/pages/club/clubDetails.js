@@ -61,7 +61,7 @@ const ClubDetails = () => {
         e.preventDefault();
         try {
             const response = await fetch(`/b/clubs/${clubId}/comments/${editedCommentId}/edit`, {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -81,7 +81,7 @@ const ClubDetails = () => {
     } catch (error) {
         console.log("Error editing comment:", error);
     }
-    }
+    };
 
     useEffect(() => {
         getClubDetails();
