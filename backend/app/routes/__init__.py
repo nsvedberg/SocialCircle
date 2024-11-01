@@ -79,14 +79,15 @@ def update_club(club_id):
     session = Session()
     data = request.get_json()
     club = session.query(Club).get(club_id)
-    club.club_name = data['club_name']
-    club.club_description = data['club_description']
-    club.club_president = data['club_president']
-    club.club_email = data['club_email']
-    club.club_tags = data['club_tags']
-    club.club_members = data['club_members']
+    if not club:
+        return jsonify({'error': 'Club not found'}), 404  # Handle club not found
+    club.name = data['club_name']
+    club.description = data['club_description']
     session.commit()
-    return club
+    return jsonify({
+        'club_name': club.name,
+        'club_description': club.description
+    })
 
 @app.route('/b/clubs/<int:club_id>/comments', methods=['POST'])
 def add_comment(club_id):
@@ -122,6 +123,18 @@ def edit_comment(comment_id, club_id):
     comment.comment = new_comment
     session.commit()
     return jsonify({"comment_id": comment.comment_id, "comment": comment.comment})
+
+@app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/delete', methods=['DELETE'])
+def delete_comment(club_id, comment_id):  
+    session = Session()
+    comment = session.query(Comment).filter(Comment.comment_id == comment_id, Comment.club_id == club_id).first()  
+    if comment:
+        session.delete(comment)
+        session.commit()
+        return jsonify({"message": "Comment deleted successfully"})
+    else:
+        return jsonify({"error": "Comment not found"}), 404
+
 
 @app.route('/b/events/new', methods=['POST'])
 def create_event():
