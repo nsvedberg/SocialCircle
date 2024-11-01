@@ -5,6 +5,8 @@ import Nav from '../../components/nav/nav';
 
 const ClubDetails = () => {
     const { clubId } = useParams();
+    const navigate = useNavigate();
+    
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
     const [comments, setComments] = useState([]);
@@ -13,7 +15,7 @@ const ClubDetails = () => {
     const [editedCommentId, setEditedCommentId] = useState('')
 
     const getClubDetails = async () => {
-        try{
+        try {
             const data = await fetch(`/b/clubs/${clubId}`);
             const clubsData = await data.json();
 
@@ -47,8 +49,8 @@ const ClubDetails = () => {
 
             if (response.ok) {
                 const newCommentData = await response.json();
-                setComments([...comments, newCommentData]); 
-                setNewComment(''); 
+                setComments([...comments, newCommentData]);
+                setNewComment('');
             } else {
                 console.log("Error adding comment");
             }
@@ -61,26 +63,40 @@ const ClubDetails = () => {
         e.preventDefault();
         try {
             const response = await fetch(`/b/clubs/${clubId}/comments/${editedCommentId}/edit`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ comment: editedComment }),
-        });
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ comment: editedComment }),
+            });
 
-        if (response.ok) {
-            const updatedComment = await response.json();
-            setComments(comments.map(comment =>
-                comment.comment_id === editedCommentId ? updatedComment : comment
-            ));
-            setEditedCommentId(null);
-            setEditedComment('');
-        } else {
-            console.log("Error editing comment");
+            if (response.ok) {
+                const updatedComment = await response.json();
+                setComments(comments.map(comment =>
+                    comment.comment_id === editedCommentId ? updatedComment : comment
+                ));
+                setEditedCommentId(null);
+                setEditedComment('');
+            } else {
+                console.log("Error editing comment");
+            }
+        } catch (error) {
+            console.log("Error editing comment:", error);
         }
-    } catch (error) {
-        console.log("Error editing comment:", error);
-    }
+    };
+
+    const deleteClub = async () => {
+        try {
+            const response = await fetch(`/b/clubs/${clubId}`, { method: 'DELETE' });
+            if (response.ok) {
+                alert("Club deleted successfully");
+                navigate('/'); // Redirect to the home page or any other relevant page
+            } else {
+                console.log("Error deleting club");
+            }
+        } catch (error) {
+            console.log("Error deleting club:", error);
+        }
     };
 
     useEffect(() => {
@@ -92,6 +108,9 @@ const ClubDetails = () => {
         <div>
             <div className="main">
                 <Nav />
+                <button className = "delete" onClick={deleteClub}>
+                    Delete Club
+                </button>
                 <h1>{club_name}</h1>
                 <h3>{club_description}</h3>
             </div>

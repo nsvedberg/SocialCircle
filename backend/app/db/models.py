@@ -77,7 +77,7 @@ class Club(Model):
     # TODO: relationship to user for president & other club admins
     # TODO: relationship to user for club members
     # TODO: relationship to interests
-    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="club")
+    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="club", cascade="all, delete-orphan") # This should delete all the comments when all clubs delelted
 
     def init(self, name, description):
         self.name = name
