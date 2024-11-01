@@ -1,0 +1,30 @@
+.user-banner-container {
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    flex-flow: row nowrap;
+}
+
+.user-banner-container * {
+    margin-right: 6px;
+}
+
+.user-banner-container span {
+    margin-left: auto;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.sign-out-btn {
+    color: white;
+    font-weight: bold;
+    padding: 6px;
+    border-radius: 0;
+    border: none;
+    background-color: #166E46;
+    font-size: 18px;
+}
+
+.sign-out-btn:hover {
+    background-color: #065E36;
+}

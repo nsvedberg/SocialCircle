@@ -4,6 +4,8 @@ from app.db.models import Club, Event, User, Comment
 
 from flask import Blueprint, abort, jsonify, request
 
+from app.routes.authorize import login_required
+
 router = Blueprint('user', __name__, url_prefix='/user')
 
 @app.route('/b/clubs/new', methods=['POST'])
@@ -27,6 +29,27 @@ def get_all_clubs():
         } for club in clubs
     ])
 
+@app.route('/b/clubs/name/<string:club_name>', methods=['GET'])
+def get_club_by_name(club_name):
+    session = Session()
+    # Query the club by name
+    clubs = session.query(Club).filter(Club.name.like(f"%{club_name}%")).all()
+
+    if not clubs:  # Check if the list is empty
+        return jsonify({'error': 'Club not found'}), 404
+
+    # Create a list of dictionaries for each club found
+    club_list = []
+    for club in clubs:
+        club_list.append({
+            'id': club.id,
+            'club_name': club.name,
+            'club_description': club.description,
+        })
+
+    return jsonify(club_list)
+
+
 @app.route('/b/clubs/<int:club_id>', methods=['GET'])
 def get_club(club_id):
     session = Session()
@@ -42,9 +65,14 @@ def get_club(club_id):
 def delete_club(club_id):
     session = Session()
     club = session.query(Club).get(club_id)
+    club_dict = {
+        'id': club.id,
+        'club_name': club.name,
+        'club_description': club.description,
+    }
     session.delete(club)
     session.commit()
-    return club
+    return jsonify(club_dict)
 
 @app.route('/b/clubs/<int:club_id>', methods=['PUT'])
 def update_club(club_id):
@@ -83,6 +111,17 @@ def get_comments(club_id):
             'comment': comment.comment
         } for comment in comments
     ]
+
+@app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/edit', methods=['GET', 'POST'])
+def edit_comment(comment_id, club_id):
+    session = Session()
+    comment = session.query(Comment).filter(Comment.comment_id == comment_id).first() # Getting the comment that matches the id wanted
+    data = request.get_json()
+    new_comment = data.get('comment')
+    # "comment.comment" represents the text in the model, here we set the comment to the new one.
+    comment.comment = new_comment
+    session.commit()
+    return jsonify({"comment_id": comment.comment_id, "comment": comment.comment})
 
 @app.route('/b/events/new', methods=['POST'])
 def create_event():
@@ -135,7 +174,7 @@ def update_event(event_id):
 def create_user():
     session = Session()
     data = request.get_json()
-    new_user = User(user_name=data['user_name'], user_email=data['user_email'], user_clubs=data['user_clubs'], user_interests=data['user_interests'])
+    new_user = User(email=data['email'], first_name=data['first_name'], last_name=data['last_name'], interests=data['interests'], bio=data['bio'])
     session.add(new_user)
     session.commit()
     return jsonify(new_user)
@@ -156,15 +195,18 @@ def delete_user(user_id):
     session.commit()
     return jsonify(user)
 
+@login_required
 @app.route('/b/users/<int:user_id>', methods=['PUT'])
 def update_user(user_id):
     session = Session()
     data = request.get_json()
+    print(data)
     user = session.query(User).get(user_id)
-    user.user_name = data['user_name']
-    user.user_email = data['user_email']
-    user.user_clubs = data['user_clubs']
-    user.user_interests = data['user_interests']
+    user.email = data['email']
+    user.first_name = data['first_name']
+    user.last_name = data['last_name']
+    user.interests = data['interests']
+    user.bio = data['bio']
     session.commit()
     return jsonify(user)
 

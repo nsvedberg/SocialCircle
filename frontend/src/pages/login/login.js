@@ -1,45 +1,101 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import './login.css' 
-import { AuthToken } from '../../App';
+import { CurrentUser } from '../../App';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
-
 const Login = () => {
-  const { token, setToken } = useContext(AuthToken);
+  const { currentUser, setCurrentUser } = useContext(CurrentUser);
   const [searchParams, setSearchParams] = useSearchParams();
-
-  const navigate = useNavigate();
-
-  if (searchParams.get("token")) {
-    console.log(searchParams.get("token"));
-    setToken(searchParams.get("token"));
-    navigate('/dashboard');
-  }
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = async(e) => {
-    e.preventDefault();
+  const navigate = useNavigate();
 
+  // Given a username and password, fetch the auth token from the backend.
+  const fetchToken = async () => {
     const response = await fetch("/b/login", {
       method: "POST",
-      headers: {"content-type": "application/json"},
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         email: email,
         password: password,
       }),
-    })
+    });
 
     const body = await response.json();
 
-    if (response.ok) {
-      setToken(body.data);
-      navigate('/dashboard');
-    } else {
+    if (!response.ok) {
+      console.log("Error fetching token from /b/login: ", body.message);
+      setError("Invalid username or password.");
+      return null;
+    }
+
+    return body.data;
+  }
+
+  // Given an auth token, fetch information about the current user from the backend.
+  const fetchCurrentUser = async (token) => {
+    const response = await fetch("/b/current-user", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+    });
+
+    const body = await response.json();
+
+    if (!response.ok) {
+      console.log("Error fetching current user from /b/current-user: ", body.error);
       setError(body.message);
+
+      return null;
+    }
+
+    body.token = token;
+
+    return body;
+  }
+
+  useEffect(() => {
+    // If the user is already logged in, redirect to the dashbaord page.
+    if (currentUser) {
+      navigate('/dashboard');
+    }
+
+    const token = searchParams.get("token");
+
+    if (token) {
+      // If we get a token param, we are handling a callback from OAuth login.
+      fetchCurrentUser(token).then((user) => {
+        if (user) {
+          setCurrentUser(user);
+          navigate('/dashboard');
+        }
+      });
+    }
+  });
+
+  // On submit, attempt to get a login token with the email and password.
+  //
+  // If that is successful, use the login token to fetch the current user and
+  // redirect to the dashboard.
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+
+    const token = await fetchToken();
+
+    if (!token) {
+      return;
+    }
+
+    const user = await fetchCurrentUser(token);
+
+    if (user) {
+      setCurrentUser(user);
+      navigate('/dashboard');
     }
   };
 
@@ -84,6 +140,5 @@ const Login = () => {
     </div>
   );
 };
-
 
 export default Login;

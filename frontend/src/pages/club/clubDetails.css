@@ -48,7 +48,7 @@ h3 {
     }
 }
 
-button {
+.join-chat-btn {
     width: 20%;
     padding: 15px;
     font-size: 1.2rem;
@@ -65,7 +65,7 @@ button {
     min-width: 100px;
 }
 
-button:hover {
+.join-chat-btn:hover {
     background-color: #0056b3;
 }
 
@@ -74,4 +74,13 @@ button:hover {
     padding: 8px; /* Padding for inputs */
     border: 1px solid #ccc; /* Border style */
     border-radius: 4px; /* Rounded corners */
+}
+
+.delete{
+    position: 'absolute';
+    top: '10px'; 
+    right: '10px';
+    font-weight: bold;
+    color: white;
+    background-color: #007BFF;
 }

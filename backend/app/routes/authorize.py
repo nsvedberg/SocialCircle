@@ -42,7 +42,7 @@ def login_required(f):
         # Get the token from the Authorization header.
         token = None
         if "Authorization" in request.headers:
-            token = request.headers["Authorization"]
+            token = request.headers["Authorization"].removeprefix("Bearer ")
         if not token:
             return {
                 "message": "Authentication Token is missing.",
@@ -111,8 +111,8 @@ def login():
                 }
             except Exception as e:
                 return {
+                    "message": str(e),
                     "error": "Something went wrong",
-                    "message": str(e)
                 }, 500
         else:
             return {
@@ -121,8 +121,8 @@ def login():
             }, 404
     except Exception as e:
         return {
-                "message": "Something went wrong",
-                "error": str(e),
+                "message": str(e),
+                "error": "Something went wrong",
         }, 500
 
 
@@ -238,7 +238,7 @@ def oauth2_callback(provider):
     # Find or create the user in the database.
     user = User.get_by_email(email)
     if user is None:
-        user = User(email=email, first_name="", last_name="")
+        user = User(email=email, first_name="", last_name="", interests="")
         session.add(user)
         session.commit()
 
