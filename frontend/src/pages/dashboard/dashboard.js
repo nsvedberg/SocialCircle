@@ -31,13 +31,8 @@ const Dashboard = () => {
         setClubs([]); // Clear the clubs array if no club is found
       }
 
-      for (let i in clubData){
-        if(clubData.club_name.includes(searchTerm)){
-          finalData.push(i);
-        }
-      }
-      setClubs([finalData])
-      console.log(finalData);
+      
+      console.log(clubData);
     } catch (error) {
       console.error('Error searching for club:', error);
       setClubs([]); // In case of error, clear the clubs array
