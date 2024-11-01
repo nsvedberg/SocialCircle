@@ -123,6 +123,18 @@ def edit_comment(comment_id, club_id):
     session.commit()
     return jsonify({"comment_id": comment.comment_id, "comment": comment.comment})
 
+@app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/delete', methods=['DELETE'])
+def delete_comment(club_id, comment_id):  
+    session = Session()
+    comment = session.query(Comment).filter(Comment.comment_id == comment_id, Comment.club_id == club_id).first()  
+    if comment:
+        session.delete(comment)
+        session.commit()
+        return jsonify({"message": "Comment deleted successfully"})
+    else:
+        return jsonify({"error": "Comment not found"}), 404
+
+
 @app.route('/b/events/new', methods=['POST'])
 def create_event():
     session = Session()

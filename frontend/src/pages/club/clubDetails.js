@@ -85,6 +85,20 @@ const ClubDetails = () => {
         }
     };
 
+    const deleteComment = async (commentId) => {
+        try {
+            const response = await fetch(`/b/clubs/${clubId}/comments/${commentId}/delete`, { method: 'DELETE' });
+            if (response.ok) {
+                alert("Comment deleted successfully");
+                window.location.reload(); // Refresh the page and the comment should be gone
+            } else {
+                console.log("Error deleting comment");
+            }
+        } catch (error) {
+            console.log("Error deleting comment:", error);
+        }
+    };
+
     const deleteClub = async () => {
         try {
             const response = await fetch(`/b/clubs/${clubId}`, { method: 'DELETE' });
@@ -138,6 +152,7 @@ const ClubDetails = () => {
                                     setEditedCommentId(comment.comment_id);
                                     setEditedComment(comment.comment);
                                 }}>Edit</button>
+                                <button onClick={() => deleteComment(comment.comment_id)}>Delete</button>
                             </>
                         )}
                     </li>
