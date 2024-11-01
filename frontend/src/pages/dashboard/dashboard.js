@@ -22,14 +22,22 @@ const Dashboard = () => {
     try {
       const data = await fetch(`/b/clubs/name/${searchTerm}`);
       const clubData = await data.json();
-  
+      const finalData = [];
+      var i;
       // If the backend returns a single club object, convert it to an array
       if (clubData) {
         setClubs([clubData]);
       } else {
         setClubs([]); // Clear the clubs array if no club is found
       }
-      console.log(clubData);
+
+      for (i in clubData){
+        if(i.includes(searchTerm)){
+          finalData.push(i);
+        }
+      }
+
+      console.log(finalData);
     } catch (error) {
       console.error('Error searching for club:', error);
       setClubs([]); // In case of error, clear the clubs array
