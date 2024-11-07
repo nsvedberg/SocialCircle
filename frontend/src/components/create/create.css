@@ -1,15 +1,39 @@
-.create-button{
-    background-color: #166E46;
+.create-button {
+    background-color: #166E46; /* Green color */
     color: white;
     text-align: center;
     font-size: 18px;
     padding: 10px 20px;
-    border-radius: 8px;
-    margin-left: 10px;
-    cursor: pointer;
-}
-.button-container{
+    border-radius: 50%;
+    width: 60px; /* Circular button */
+    height: 60px;
     display: flex;
+    justify-content: center;
     align-items: center;
-    
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.create-button-container {
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    align-items: center;  /* Center vertically */
+    margin-top: 20px;  /* Space above the button */
+    gap: 10px; /* Space between the header and button */
+}
+
+.create-button-container h1 {
+    font-size: 24px;
+    margin: 0; /* Remove default margin */
+}
+
+.create-button:hover {
+    background-color: #4CAF50;
+    transform: translateY(-2px);
+}
+
+.create-button:active {
+    background-color: #3e8e41;
+    transform: translateY(0);
 }

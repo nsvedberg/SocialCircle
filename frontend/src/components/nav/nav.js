@@ -13,6 +13,10 @@ const nav = () => {
             <span role="img" aria-label="home">🏠</span>
             <p>Dashboard</p>
           </Link>
+          <Link to="/clubs" className="nav-item">
+          <span role="img" aria-label="clubs">♣️</span>
+            <p>Clubs</p>
+          </Link>
           <Link to="/messages" className="nav-item">
           <span role="img" aria-label="message">💬</span>
             <p>Messages</p>
