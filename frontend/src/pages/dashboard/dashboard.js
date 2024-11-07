@@ -3,15 +3,13 @@ import Nav from '../../components/nav/nav';
 import './dashboard.css';
 import { CurrentUser } from '../../App';
 import { useNavigate } from "react-router-dom";
-import CreateButton from '../../components/create/create';
+import CreateEventButton from '../../components/create/CreateEventButton'; // Import CreateEventButton
 import UserBanner from '../../components/userBanner/userBanner';
 
 const Dashboard = () => {
   const { currentUser, setCurrentUser } = useContext(CurrentUser);
-  const [clubs, setClubs] = useState([]);
-
+  const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-
   const navigate = useNavigate();
 
   const handleInputChange = (event) => {
@@ -20,43 +18,31 @@ const Dashboard = () => {
 
   const handleSearch = async () => {
     try {
-      const data = await fetch(`/b/clubs/name/${searchTerm}`);
-      const clubData = await data.json();
-      const finalData = [];
-      
-      // If the backend returns a single club object, convert it to an array
-      if (clubData) {
-        setClubs([clubData]);
-      } else {
-        setClubs([]); // Clear the clubs array if no club is found
-      }
-
-      
-      console.log(clubData);
+      const data = await fetch(`/b/events?search=${searchTerm}`);
+      const eventData = await data.json();
+      setEvents(eventData);
     } catch (error) {
-      console.error('Error searching for club:', error);
-      setClubs([]); // In case of error, clear the clubs array
+      console.error('Error searching for events:', error);
     }
   };
 
   const clearBar = async () => {
-    setSearchTerm("")
-    getClubs()
-  }
-  // Fetch clubs from the backend
-  const getClubs = async () => {
+    setSearchTerm("");
+    getEvents();
+  };
+
+  const getEvents = async () => {
     try {
-      const data = await fetch("/b/clubs");
-      const clubsData = await data.json();
-      setClubs(clubsData); // Assuming the data contains a Clubs array
+      const data = await fetch("/b/events");
+      const eventData = await data.json();
+      setEvents(eventData);
     } catch (error) {
-      console.error('Error fetching clubs:', error);
+      console.error('Error fetching events:', error);
     }
   };
 
-  // Use useEffect to call getClubs when the component loads
   useEffect(() => {
-    getClubs();
+    getEvents();
   }, []);
 
   return (
@@ -68,7 +54,7 @@ const Dashboard = () => {
           type="text"
           value={searchTerm}
           onChange={handleInputChange}
-          placeholder="Search..."
+          placeholder="Search events..."
           className="search-bar"
         />
         <button onClick={handleSearch} className="search-button">
@@ -80,21 +66,22 @@ const Dashboard = () => {
         </button>
       </div>
 
-      <CreateButton />
+      <CreateEventButton /> {/* This button is only visible on the dashboard */}
+      
       <Nav />
       
-      {/* Display the clubs in cards */}
-      <div className="clubs-container">
-        {clubs.length > 0 ? (
-          clubs.map((club, index) => (
-            <div key={index} className="club-card">
-              <h2>{club.club_name}</h2>
-              <p>Members: {club.Members}</p>
-              <a href={`/club/${club.id}`} rel="noopener noreferrer">Visit Club</a>
+      <div className="events-container">
+        {events.length > 0 ? (
+          events.map((event, index) => (
+            <div key={index} className="event-card">
+              <h2>{event.event_name}</h2>
+              <p>{event.event_description}</p>
+              <p>Location: {event.event_location}</p>
+              <a href={`/event/${event.id}`} rel="noopener noreferrer">View Event</a>
             </div>
           ))
         ) : (
-          <p>No clubs available</p>
+          <p>No events available</p>
         )}
       </div>
     </div>
