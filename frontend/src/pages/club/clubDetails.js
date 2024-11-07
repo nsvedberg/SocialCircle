@@ -11,8 +11,15 @@ const ClubDetails = () => {
     const [club_description, setDescription] = useState('');
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
-    const [editedComment, setEditedComment] = useState('')
-    const [editedCommentId, setEditedCommentId] = useState('')
+    const [editedComment, setEditedComment] = useState('');
+    const [editedCommentId, setEditedCommentId] = useState('');
+    const [isEditingClub, setIsEditingClub] = useState(false); 
+    const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state starts out not open
+
+    // Im using a dropdown for the edit/delete for clubs, this keeps track if its open or not
+    const toggleDropdown = () => {
+        setDropdownOpen(!dropdownOpen);
+    };
 
     const getClubDetails = async () => {
         try {
@@ -85,17 +92,58 @@ const ClubDetails = () => {
         }
     };
 
+    const deleteComment = async (commentId) => {
+        try {
+            const response = await fetch(`/b/clubs/${clubId}/comments/${commentId}/delete`, { method: 'DELETE' });
+            if (response.ok) {
+                alert("Comment deleted successfully");
+                window.location.reload(); // Refresh the page and the comment should be gone
+            } else {
+                console.log("Error deleting comment");
+            }
+        } catch (error) {
+            console.log("Error deleting comment:", error);
+        }
+    };
+
     const deleteClub = async () => {
         try {
             const response = await fetch(`/b/clubs/${clubId}`, { method: 'DELETE' });
             if (response.ok) {
                 alert("Club deleted successfully");
-                navigate('/'); // Redirect to the home page or any other relevant page
+                navigate('/'); // Redirect to the home
             } else {
                 console.log("Error deleting club");
             }
         } catch (error) {
             console.log("Error deleting club:", error);
+        }
+    };
+
+    const editClub = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch(`/b/clubs/${clubId}`, {
+                method: 'PUT', 
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    club_name, 
+                    club_description 
+                }),
+            });
+
+            if (response.ok) {
+                const updatedClub = await response.json();
+                setName(updatedClub.club_name);
+                setDescription(updatedClub.club_description);
+                setIsEditingClub(false); 
+            } else {
+                console.log("Error editing club");
+            }
+        } catch (error) {
+            console.log("Error editing club:", error);
         }
     };
 
@@ -108,11 +156,43 @@ const ClubDetails = () => {
         <div>
             <div className="main">
                 <Nav />
-                <button className = "delete" onClick={deleteClub}>
-                    Delete Club
-                </button>
-                <h1>{club_name}</h1>
-                <h3>{club_description}</h3>
+                <div className="dropdown-container">
+                    <button className="dropdown-toggle" onClick={toggleDropdown}>
+                        Options
+                    </button>
+                    {dropdownOpen && (
+                        <div className="dropdown-menu">
+                            <button onClick={() => setIsEditingClub(true)}>Edit Club</button>
+                            <button onClick={deleteClub}>Delete Club</button>
+                        </div>
+                    )}
+                </div>
+                {isEditingClub ? (
+                    <form onSubmit={editClub}>
+                        <input
+                            type="text"
+                            value={club_name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Club Name"
+                            required
+                            className="form-input"
+                        />
+                        <textarea
+                            value={club_description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder="Club Description"
+                            required
+                            className="form-input"
+                        />
+                        <button type="submit">Save</button>
+                        <button type="button" onClick={() => setIsEditingClub(false)}>Cancel</button>
+                    </form>
+                ) : (
+                    <>
+                        <h1>{club_name}</h1>
+                        <h3>{club_description}</h3>
+                    </>
+                )}
             </div>
             <h4>Comments:</h4>
             <ul>
@@ -138,6 +218,7 @@ const ClubDetails = () => {
                                     setEditedCommentId(comment.comment_id);
                                     setEditedComment(comment.comment);
                                 }}>Edit</button>
+                                <button onClick={() => deleteComment(comment.comment_id)}>Delete</button>
                             </>
                         )}
                     </li>

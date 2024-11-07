@@ -8,35 +8,18 @@ const Profile = () => {
 
   console.log(currentUser);
 
-  const [profile, setProfile] = useState({
-    username: '',
-    profilePicture: '',
-    interests: '',
-    preferredClubTypes: '',
-    favoriteActivities: '',
-    bio: '',
-  });
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProfile((prevProfile) => ({
-      ...prevProfile,
+    console.log(name);
+    console.log(value);
+    console.log({
+      ...currentUser,
       [name]: value,
-    }));
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfile((prevProfile) => ({
-          ...prevProfile,
-          profilePicture: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
+    });
+    setCurrentUser({
+      ...currentUser,
+      [name]: value,
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -75,12 +58,7 @@ const Profile = () => {
     <div className='profile-container'>
       <h1>Profile</h1>
       <div className='profile-header'>
-        <img
-          src={profile.profilePicture || 'default-profile-pic.png'}
-          alt='Profile'
-          className='profile-picture'
-        />
-        <h2>{profile.username}</h2>
+        <h2>{currentUser.email}</h2>
       </div>
       <form onSubmit={handleSubmit} className='profile-form'>
         <div className='form-group'>
