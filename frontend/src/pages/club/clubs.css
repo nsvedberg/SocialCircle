@@ -1,0 +1,100 @@
+/* Clubs Page Styles */
+
+.clubs-body {
+    padding: 20px;
+  }
+  
+  .search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+  
+  .search-bar {
+    width: 250px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .search-bar:focus {
+    border: 2px solid #4CAF50;
+    outline: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .search-button, .clear-button {
+    background-color: #4CAF50;
+    color: white;
+    width: 65px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-button:hover, .clear-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+  }
+  
+  .search-button:active, .clear-button:active {
+    background-color: #3e8e41;
+    transform: translateY(0);
+  }
+  
+  .search-button:focus, .clear-button:focus {
+    outline: none;
+  }
+  
+  .clear-button {
+    background-color: #f44336;
+  }
+  
+  .clear-button:hover {
+    background-color: #e53935;
+  }
+  
+  .clear-button:active {
+    background-color: #d32f2f;
+  }
+  
+  .clubs-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-left: 50px;
+    padding-right: 50px;
+    justify-content: center;
+  }
+  
+  .club-card {
+    background-color: #015c42;
+    color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .club-card h2 {
+    font-size: 1.2em;
+  }
+  
+  .club-card p {
+    margin: 10px 0;
+  }
+  
+  .club-card a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+  

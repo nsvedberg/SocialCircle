@@ -4,97 +4,143 @@
     font-size: 16px;
     text-align: right;
     border-bottom: 1px solid rgb(204, 204, 204);
+}/* dashboard.css */
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  background-color: #f4f4f4;  /* Light background for the entire page */
 }
 
-/* dashboard.css */
-.clubs-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding-left: 50px;
-    padding-right: 50px;
-  }
-  
-  .club-card {
-    background-color: #015c42;
-    color: white;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .club-card h2 {
-    font-size: 1.2em;
-  }
-  
-  .club-card p {
-    margin: 10px 0;
-  }
-  
-  .club-card a {
-    text-decoration: none;
-    color: white;
-    weight: bold;
+/* Search Bar Section */
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.search-bar {
+  width: 300px;
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  font-size: 16px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-bar:focus {
+  border: 2px solid #4CAF50;
+  outline: none;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.search-button,
+.clear-button {
+  background-color: #4CAF50;
+  color: white;
+  width: 80px;
+  border: none;
+  border-radius: 25px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: 10px;
+}
+
+.search-button:hover,
+.clear-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.search-button:active,
+.clear-button:active {
+  background-color: #3e8e41;
+  transform: translateY(0);
+}
+
+.clear-button {
+  background-color: #f44336;
+}
+
+.clear-button:hover {
+  background-color: #e53935;
+}
+
+.clear-button:active {
+  background-color: #d32f2f;
+}
+
+/* Container for Event Cards */
+.events-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the events */
+  gap: 20px;
+  padding: 20px;
+  width: 100%; /* Make sure the container spans full width */
+  max-width: 900px; /* Limit width to avoid very wide content */
+  margin-top: 20px; /* Add space between search and events */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Event Card Styling */
+.event-card {
+  background-color: #ffffff;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;  /* Make card take full width of container */
+  max-width: 800px; /* Limit card width */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.event-card h2 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.event-card p {
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+
+.event-card a {
+  text-decoration: none;
+  color: #4CAF50;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.event-card a:hover {
+  text-decoration: underline;
+}
+
+.event-card .event-date,
+.event-card .event-time,
+.event-card .event-location {
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* Additional Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .events-container {
+      padding: 10px;
+      max-width: 95%;  /* Allow more space on smaller screens */
   }
 
-
-  
-  .search-bar {
-    width: 250px;
-
-    border: 2px solid #ddd;
-    border-radius: 25px;
-    font-size: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: border 0.3s ease, box-shadow 0.3s ease;
+  .event-card {
+      max-width: 100%;  /* Allow cards to take full width on mobile */
   }
-  
-  .search-bar:focus {
-    border: 2px solid #4CAF50;
-    outline: none;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  .search-button, .clear-button {
-    background-color: #4CAF50;
-    color: white;
-    width: 65px;
-
-    border: none;
-    border-radius: 25px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .search-button:hover, .clear-button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-  }
-  
-  .search-button:active, .clear-button:active {
-    background-color: #3e8e41;
-    transform: translateY(0);
-  }
-  
-  .search-button:focus, .clear-button:focus {
-    outline: none;
-  }
-  
-  .clear-button {
-    background-color: #f44336;
-  }
-  
-  .clear-button:hover {
-    background-color: #e53935;
-  }
-  
-  .clear-button:active {
-    background-color: #d32f2f;
-  }
-  
-  
+}
