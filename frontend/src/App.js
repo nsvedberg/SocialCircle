@@ -11,6 +11,7 @@ import Chatbot from './pages/message/Chatbot';
 import CreateClub from './pages/club/createClub';
 import ClubDetails from './pages/club/clubDetails';
 import CreateEvent from './pages/event/createEvent';
+import Clubs from './pages/club/clubs';
 import { useCurrentUser, RequireAuth } from './auth/useCurrentUser'
 
 export const CurrentUser = React.createContext(null);
@@ -26,6 +27,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/clubs/new" element={<CreateClub />} />
+          <Route path="/clubs" element={<Clubs />} />
           <Route path="/b/events/new" element={<CreateEvent />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={
