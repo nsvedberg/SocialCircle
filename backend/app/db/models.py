@@ -1,11 +1,9 @@
+from __future__ import annotations
+
 from app.db.session import Session
 
 from typing import Optional, List
 
-from sqlalchemy.orm import DeclarativeBase
-from sqlalchemy.orm import mapped_column, relationship
-from sqlalchemy.orm import Mapped
-from sqlalchemy import DateTime, Integer, String, select, ForeignKey
 
 from argon2 import PasswordHasher
 
@@ -13,10 +11,17 @@ from dataclasses import dataclass
 
 from datetime import datetime
 
+from sqlalchemy import Column
+from sqlalchemy import DateTime, Integer, String, select, ForeignKey
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
 from sqlalchemy import Integer, String, select, ForeignKey
+from sqlalchemy import Table
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import mapped_column, relationship
+from sqlalchemy.orm import relationship
 
 from typing import Optional, List
 
@@ -24,6 +29,13 @@ class Model(DeclarativeBase):
     """The base model class. All models should inherit this class."""
 
     pass
+
+club_user_relationship = Table(
+    "club_user_relationship",
+    Model.metadata,
+    Column("user_id", ForeignKey("user.id")),
+    Column("club_id", ForeignKey("club.id")),
+)
 
 @dataclass
 class User(Model):
@@ -45,7 +57,9 @@ class User(Model):
 
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    # TODO: relationship to interests & clubs
+    clubs: Mapped[List[Club]] = relationship(
+        secondary=club_user_relationship, back_populates="users"
+    )
 
     def init(self, email, first_name, last_name, interests):
         self.email = email
@@ -79,6 +93,10 @@ class Club(Model):
 
     name: Mapped[str]
     description: Mapped[str]
+
+    users: Mapped[List[User]] = relationship(
+        secondary=club_user_relationship, back_populates="clubs"
+    )
 
     # TODO: relationship to user for president & other club admins
     # TODO: relationship to user for club members
