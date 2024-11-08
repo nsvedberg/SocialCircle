@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import './clubDetails.css';
 import Nav from '../../components/nav/nav';
+import { useCurrentUser } from '../../auth/useCurrentUser';
 
 const ClubDetails = () => {
     const { clubId } = useParams();
     const navigate = useNavigate();
+    const { user } = useCurrentUser();
     
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
@@ -30,6 +32,28 @@ const ClubDetails = () => {
             setDescription(clubsData.club_description);
         } catch {
             console.log("Error fetching club details");
+        }
+    };
+
+    const handleJoinChat = async () => {
+        try {
+            const response = await fetch(`/b/users/${user}/add-to-club/${clubId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const updatedUser = await response.json();
+                console.log("Successfully joined the club:", updatedUser);
+                alert("You have successfully joined the group chat!");
+            } else {
+                console.log("Failed to join the club");
+                alert("There was an error joining the group chat. Please try again.");
+            }
+        } catch (error) {
+            console.log("Error joining the club:", error);
         }
     };
 
@@ -236,7 +260,7 @@ const ClubDetails = () => {
                 />
                 <button type="submit">Submit</button>
             </form>
-            <button className="join-chat-btn">Join the group chat!</button>
+            <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button>
         </div>
     );
 };
