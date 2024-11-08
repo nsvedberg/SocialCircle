@@ -201,11 +201,35 @@ def create_user():
 
 @app.route('/b/users', methods=['GET'])
 def get_all_users():
-    return Session().query(User).all()
+    users = Session().query(User).all()
+    return jsonify([
+        {
+            'id': user.id,
+            'email': user.email,
+            'password_pash': user.password_hash,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'grad_year': user.grad_year,
+            'interests': user.interests,
+            'bio': user.bio,
+            'is_active': user.is_active,
+        } for user in users
+    ])
 
 @app.route('/b/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
-    return jsonify(Session().query(User).get(user_id))
+    user = Session().query(User).get(user_id)
+    return jsonify({
+        'id': user.id,
+        'email': user.email,
+        'password_pash': user.password_hash,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'grad_year': user.grad_year,
+        'interests': user.interests,
+        'bio': user.bio,
+        'is_active': user.is_active,
+    })
 
 @app.route('/b/users/<int:user_id>', methods=['DELETE'])
 def delete_user(user_id):
@@ -229,6 +253,48 @@ def update_user(user_id):
     user.interests = data['interests']
     user.bio = data['bio']
     session.commit()
-    return jsonify(user)
+    return jsonify({
+        'id': user.id,
+        'email': user.email,
+        'password_pash': user.password_hash,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'grad_year': user.grad_year,
+        'interests': user.interests,
+        'bio': user.bio,
+        'is_active': user.is_active,
+    })
+
+@app.route('/b/users/<int:user_id>/add-to-club/<int:club_id>', methods=['POST'])
+def add_user_to_club(user_id, club_id):
+    session = Session()
+    user = session.query(User).get(user_id)
+    club = session.query(Club).get(club_id)
+    user.clubs.append(club)
+    session.commit()
+    return jsonify({
+        'id': user.id,
+        'email': user.email,
+        'password_pash': user.password_hash,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'grad_year': user.grad_year,
+        'interests': user.interests,
+        'bio': user.bio,
+        'is_active': user.is_active,
+    })
+
+@app.route('/b/users/<int:user_id>/clubs', methods=['GET'])
+def get_clubs_for_user(user_id):
+    session = Session()
+    user = session.query(User).get(user_id)
+    return jsonify([
+        {
+            'id': club.id,
+            'club_name': club.name,
+            'club_description': club.description,
+        } for club in user.clubs
+    ])
+
 
 import app.routes.authorize

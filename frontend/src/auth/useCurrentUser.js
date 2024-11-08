@@ -30,7 +30,7 @@ export function RequireAuth({ children }) {
   let { currentUser, setCurrentUser } = useCurrentUser();
   let location = useLocation();
 
-  console.log(currentUser);
+  // console.log(currentUser);
 
   if (!currentUser) {
     return <Navigate to="/login" state={{ from: location }} replace />;

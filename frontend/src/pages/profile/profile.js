@@ -93,7 +93,9 @@ const Profile = () => {
         </div>
         <div className='form-group'>
           <label htmlFor='grad-year'>Year of Graduation:</label>
-          <select id='grad-year' name='grad-year'>
+          <select id='grad-year' name='grad_year'>
+            <option selected="selected">{currentUser.grad_year}</option>
+            <option disabled="disabled">--</option>
             <option>2024</option>
             <option>2025</option>
             <option>2026</option>
