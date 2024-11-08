@@ -12,6 +12,7 @@ import CreateClub from './pages/club/createClub';
 import ClubDetails from './pages/club/clubDetails';
 import CreateEvent from './pages/event/createEvent';
 import Clubs from './pages/club/clubs';
+import User from './pages/user/user';
 import { useCurrentUser, RequireAuth } from './auth/useCurrentUser'
 
 export const CurrentUser = React.createContext(null);
@@ -30,6 +31,7 @@ function App() {
           <Route path="/clubs" element={<Clubs />} />
           <Route path="/b/events/new" element={<CreateEvent />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/user/:id" element={<User />} />
           <Route path="/dashboard" element={
             <RequireAuth>
               <Dashboard />

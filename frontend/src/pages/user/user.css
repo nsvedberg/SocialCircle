@@ -1,0 +1,25 @@
+.user-container {
+    width: 80%;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+}
+
+.user-container h1 {
+    margin-top: 0;
+}
+
+.user-profile {
+    border: black solid thin;
+    padding: 1em;
+    border-radius: 3px;
+}
+
+.user-sect {
+    margin: 1em 0;
+}
+
+.user-sect-label {
+    color: hsl(0, 0%, 40%);
+    font-style: italic;
+}
