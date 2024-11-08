@@ -1,16 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './ChatList.css';
 import Nav from '../../components/nav/nav';
+import { useCurrentUser } from '../../auth/useCurrentUser';
 
 const ChatList = () => {
-  // Example chats data
-  const chats = [
-    { id: 1, name: 'John Doe', lastMessage: 'Hey, how are you?' },
-    { id: 2, name: 'Jane Smith', lastMessage: 'Can we meet tomorrow?' },
-    { id: 3, name: 'Michael Brown', lastMessage: 'I finished the project!' },
-    // Add more chats as needed
-  ];
+  const { user } = useCurrentUser(); // Get the current user's details
+  const [chats, setChats] = useState([]); // State to hold the user's clubs
+  const { currentUser, setCurrentUser } = useCurrentUser();
+
+  useEffect(() => {
+    // Fetch the user's clubs from the backend
+    const fetchClubs = async () => {
+      try {
+        const response = await fetch(`/b/users/${currentUser.id}/clubs`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        if (response.ok) {
+          const clubsData = await response.json();
+          console.log(clubsData)
+          // Map the clubs to match the structure of chat items
+          const chatItems = clubsData.map(club => ({
+            id: club.id,
+            name: club.club_name,
+            lastMessage: `Welcome to ${club.club_name}!`, // Placeholder last message
+          }));
+          
+          setChats(chatItems);
+        } else {
+          console.error('Failed to fetch clubs');
+        }
+      } catch (error) {
+        console.error('Error fetching clubs:', error);
+      }
+    };
+
+    if (currentUser?.id) {
+      fetchClubs();
+    }
+  }, [currentUser]);
 
   return (
     <div className='chat-list'>

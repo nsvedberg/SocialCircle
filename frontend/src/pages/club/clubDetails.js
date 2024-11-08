@@ -7,7 +7,7 @@ import { useCurrentUser } from '../../auth/useCurrentUser';
 const ClubDetails = () => {
     const { clubId } = useParams();
     const navigate = useNavigate();
-    const { user } = useCurrentUser();
+    const { currentUser, setCurrentUser } = useCurrentUser();
     
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
@@ -37,7 +37,7 @@ const ClubDetails = () => {
 
     const handleJoinChat = async () => {
         try {
-            const response = await fetch(`/b/users/${user}/add-to-club/${clubId}`, {
+            const response = await fetch(`/b/users/${currentUser.id}/add-to-club/${clubId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
