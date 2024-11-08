@@ -33,8 +33,8 @@ def get_all_clubs():
 def get_club_by_name(club_name):
     session = Session()
     # Query the club by name
-    clubs = session.query(Club).filter(Club.name.like(f"%{club_name}%")).all()
-
+    clubs = session.query(Club).filter(Club.name.ilike(f"%{club_name}%")).all()
+    
     if not clubs:  # Check if the list is empty
         return jsonify({'error': 'Club not found'}), 404
 
@@ -46,7 +46,7 @@ def get_club_by_name(club_name):
             'club_name': club.name,
             'club_description': club.description,
         })
-
+        
     return jsonify(club_list)
 
 
