@@ -38,11 +38,15 @@
     margin-bottom: 5px;
 }
   
-.form-group input, .form-group textarea {
+.form-group input, .form-group textarea, .form-group select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 4px;
+}
+
+.form-group input, .form-group textarea {
+    box-sizing: border-box;
 }
   
 .submit-button {
