@@ -130,7 +130,17 @@ def login():
 @login_required
 def current_user(user):
     """Returns the currently logged-in user."""
-    return jsonify(user)
+    return jsonify({
+        'id': user.id,
+        'email': user.email,
+        'password_pash': user.password_hash,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'grad_year': user.grad_year,
+        'interests': user.interests,
+        'bio': user.bio,
+        'is_active': user.is_active,
+    })
 
 
 # A list of OAuth2 providers that we support for alternate log-in.
