@@ -8,12 +8,14 @@ from app.routes.authorize import login_required
 
 router = Blueprint('user', __name__, url_prefix='/user')
 
+@login_required # This gives access to current_user
 @app.route('/b/clubs/new', methods=['POST'])
-def create_club():
+def create_club(current_user):
     session = Session()
     data = request.get_json()
     new_club = Club(name=data['club_name'],
-                    description=data['club_description'])
+                    description=data['club_description'],
+                    user_id = current_user.id)
     session.add(new_club)
     session.commit()
     return jsonify(new_club)
@@ -61,10 +63,17 @@ def get_club(club_id):
     }
     return jsonify(club_dict)
 
+@login_required
 @app.route('/b/clubs/<int:club_id>', methods=['DELETE'])
-def delete_club(club_id):
+def delete_club(current_user, club_id):
     session = Session()
     club = session.query(Club).get(club_id)
+    if club.user_id is None:
+        return jsonify({"error": "This club has no owner and cannot be deleted by anyone."}), 400
+
+    if club.user_id != current_user.id: # Don't let the club be deleted unless the current user and club creator match
+        return jsonify({"error": "You are not authorized to delete this club"}), 403
+    
     club_dict = {
         'id': club.id,
         'club_name': club.name,
@@ -74,11 +83,14 @@ def delete_club(club_id):
     session.commit()
     return jsonify(club_dict)
 
+@login_required
 @app.route('/b/clubs/<int:club_id>', methods=['PUT'])
-def update_club(club_id):
+def update_club(current_user, club_id):
     session = Session()
     data = request.get_json()
     club = session.query(Club).get(club_id)
+    if club.user_id != current_user.id: # Don't let the club be updated unless the current user and club creator match
+        return jsonify({"error": "You are not authorized to delete this club"}), 403
     if not club:
         return jsonify({'error': 'Club not found'}), 404  # Handle club not found
     club.name = data['club_name']
@@ -89,6 +101,7 @@ def update_club(club_id):
         'club_description': club.description
     })
 
+@login_required
 @app.route('/b/clubs/<int:club_id>/comments', methods=['POST'])
 def add_comment(club_id):
     session = Session()
@@ -102,6 +115,7 @@ def add_comment(club_id):
         return {'comment_id': new_comment.comment_id, 'comment': new_comment.comment}, 201
     return {'error': 'Club not found'}, 404
 
+@login_required
 @app.route('/b/clubs/<int:club_id>/comments', methods=['GET'])
 def get_comments(club_id):
     session = Session()
@@ -113,6 +127,7 @@ def get_comments(club_id):
         } for comment in comments
     ]
 
+@login_required
 @app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id, club_id):
     session = Session()
@@ -124,6 +139,7 @@ def edit_comment(comment_id, club_id):
     session.commit()
     return jsonify({"comment_id": comment.comment_id, "comment": comment.comment})
 
+@login_required
 @app.route('/b/clubs/<int:club_id>/comments/<int:comment_id>/delete', methods=['DELETE'])
 def delete_comment(club_id, comment_id):  
     session = Session()

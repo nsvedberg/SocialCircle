@@ -44,6 +44,7 @@ class User(Model):
     is_active: Mapped[bool] = mapped_column(default=True)
 
     # TODO: relationship to interests & clubs
+    clubs: Mapped[List["Club"]] = relationship("Club", back_populates="user") # List of clubs created by the user
 
     def init(self, email, first_name, last_name, interests):
         self.email = email
@@ -78,14 +79,16 @@ class Club(Model):
     name: Mapped[str]
     description: Mapped[str]
 
-    # TODO: relationship to user for president & other club admins
+    user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id')) # This is for the creator of the club
+    user: Mapped["User"] = relationship("User", back_populates="clubs")
     # TODO: relationship to user for club members
     # TODO: relationship to interests
     comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="club", cascade="all, delete-orphan") # This should delete all the comments when all clubs delelted
 
-    def init(self, name, description):
+    def init(self, name, description, user_id):
         self.name = name
         self.description = description
+        self.user_id = user_id
 
 @dataclass
 class Event(Model):
