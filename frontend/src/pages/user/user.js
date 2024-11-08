@@ -31,6 +31,10 @@ const User = () => {
     <div className='user-container'>
       <div className='user-profile'>
         <h1>{user.first_name} {user.last_name}</h1>
+        <div className='user-sect user-grad-year'>
+          <span className='user-sect-label'>Grad Year: </span>
+          {user.grad_year}
+        </div>
         <div className='user-sect user-interests'>
           <span className='user-sect-label'>Interests: </span>
           {user.interests}
@@ -44,12 +48,5 @@ const User = () => {
     </div>
   );
 };
-
-/*
-      value={currentUser.first_name}
-      value={currentUser.last_name}
-      value={currentUser.interests}
-      value={currentUser.bio}
-      */
 
 export default User;

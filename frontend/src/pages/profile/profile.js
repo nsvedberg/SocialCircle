@@ -92,6 +92,18 @@ const Profile = () => {
           />
         </div>
         <div className='form-group'>
+          <label htmlFor='grad-year'>Year of Graduation:</label>
+          <select id='grad-year' name='grad-year'>
+            <option>2024</option>
+            <option>2025</option>
+            <option>2026</option>
+            <option>2027</option>
+            <option>2028</option>
+            <option>2029</option>
+            <option>2030</option>
+          </select>
+        </div>
+        <div className='form-group'>
           <label htmlFor='interests'>Interests:</label>
           <input
             type='text'
