@@ -1,3 +1,4 @@
+from operator import and_
 from app import app
 from app.db.session import Session
 from app.db.models import Club, Event, User, Comment
@@ -33,7 +34,13 @@ def get_all_clubs():
 def get_club_by_name(club_name):
     session = Session()
     # Query the club by name
-    clubs = session.query(Club).filter(Club.name.ilike(f"%{club_name}%")).all()
+    
+    conditions = []
+    for letter in club_name:
+        conditions.append(Club.name.ilike(f"%{letter}%"))
+    
+    clubs = session.query(Club).filter(and_(*conditions)).all()
+    #clubs = session.query(Club).filter(Club.name.ilike(f"%{club_name}%")).all() 
     
     if not clubs:  # Check if the list is empty
         return jsonify({'error': 'Club not found'}), 404
