@@ -187,7 +187,7 @@ def update_event(event_id):
 def create_user():
     session = Session()
     data = request.get_json()
-    new_user = User(email=data['email'], first_name=data['first_name'], last_name=data['last_name'], interests=data['interests'], bio=data['bio'])
+    new_user = User(email=data['email'], first_name=data['first_name'], last_name=data['last_name'], grad_year=2024, interests=data['interests'], bio=data['bio'])
     session.add(new_user)
     session.commit()
     return jsonify(new_user)
@@ -218,6 +218,7 @@ def update_user(user_id):
     user.email = data['email']
     user.first_name = data['first_name']
     user.last_name = data['last_name']
+    user.grad_year = data['grad_year']
     user.interests = data['interests']
     user.bio = data['bio']
     session.commit()

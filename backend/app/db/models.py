@@ -38,6 +38,8 @@ class User(Model):
     first_name: Mapped[str]
     last_name: Mapped[str]
 
+    grad_year: Mapped[int]
+
     interests: Mapped[str]
     bio: Mapped[str]
 
