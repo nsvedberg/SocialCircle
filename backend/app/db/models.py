@@ -4,7 +4,6 @@ from app.db.session import Session
 
 from typing import Optional, List
 
-
 from argon2 import PasswordHasher
 
 from dataclasses import dataclass
@@ -12,7 +11,7 @@ from dataclasses import dataclass
 from datetime import datetime
 
 from sqlalchemy import Column
-from sqlalchemy import DateTime, Integer, String, select, ForeignKey
+from sqlalchemy import Date, DateTime, Integer, String, select, ForeignKey
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import Integer, String, select, ForeignKey
@@ -24,6 +23,9 @@ from sqlalchemy.orm import mapped_column, relationship
 from sqlalchemy.orm import relationship
 
 from typing import Optional, List
+
+from marshmallow import Schema, fields, post_load
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 class Model(DeclarativeBase):
     """The base model class. All models should inherit this class."""
@@ -37,7 +39,6 @@ club_user_relationship = Table(
     Column("club_id", ForeignKey("club.id")),
 )
 
-@dataclass
 class User(Model):
 
     __tablename__ = 'user'
@@ -63,14 +64,6 @@ class User(Model):
 
     comments: Mapped[List[Comment]] = relationship("Comment", back_populates="user")
 
-    def init(self, email, first_name, last_name, interests):
-        self.email = email
-        self.password_hash = None
-        self.first_name = first_name
-        self.last_name = last_name
-        self.interests = interests
-        self.is_active = True
-
     def get_by_email(email):
         """Get a user, given the email."""
         session = Session()
@@ -86,7 +79,6 @@ class User(Model):
         ph = PasswordHasher()
         self.password_hash = ph.hash(pw)
 
-@dataclass
 class Club(Model):
 
     __tablename__ = 'club'
@@ -109,7 +101,6 @@ class Club(Model):
         self.name = name
         self.description = description
 
-@dataclass
 class Event(Model):
 
     __tablename__ = 'event'
@@ -141,9 +132,8 @@ class Event(Model):
         self.event_location = event_location
         self.event_club = event_club
         self.event_tags = event_tags
-        
+
 # Comment model, commented for now (ironic lol) until I can test it when the single club page is built
-@dataclass
 class Comment(Model):
     __tablename__ = 'comments'
     comment_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
@@ -159,3 +149,21 @@ class Comment(Model):
     def init(self, comment, club_id):
         self.comment = comment
         self.club_id = club_id
+
+class UserSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = User
+        include_relationships = True
+        load_instance = True
+
+class ClubSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Club
+        include_relationships = True
+        load_instance = True
+
+class EventSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Event
+        include_relationships = True
+        load_instance = True
