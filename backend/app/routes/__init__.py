@@ -34,15 +34,17 @@ def get_all_clubs():
 def get_club_by_name(club_name):
     session = Session()
     # Query the club by name
+    my_list = list(club_name)
     
     conditions = []
-    for letter in club_name:
-        conditions.append(Club.name.ilike(f"%{letter}%"))
-    
-    clubs = session.query(Club).filter(and_(*conditions)).all()
-    #clubs = session.query(Club).filter(Club.name.ilike(f"%{club_name}%")).all() 
+    for letter in my_list:
+       conditions.append(Club.name.ilike(f"%{letter}%"))
+        
+    #clubs = session.query(Club).filter(and_(*conditions)).all()
+    clubs = session.query(Club).filter(Club.name.ilike(f"%{club_name}%")).all()
     
     if not clubs:  # Check if the list is empty
+        print(f"No clubs found for the name: {club_name}")
         return jsonify({'error': 'Club not found'}), 404
 
     # Create a list of dictionaries for each club found
