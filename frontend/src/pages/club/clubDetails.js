@@ -12,6 +12,7 @@ const ClubDetails = () => {
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
     const [comments, setComments] = useState([]);
+    const [users, setUsers] = useState([]); // User list
     const [newComment, setNewComment] = useState('');
     const [editedComment, setEditedComment] = useState('');
     const [editedCommentId, setEditedCommentId] = useState('');
@@ -30,6 +31,7 @@ const ClubDetails = () => {
 
             setName(clubsData.club_name);
             setDescription(clubsData.club_description);
+            setUsers(clubsData.users);
         } catch {
             console.log("Error fetching club details");
         }
@@ -214,7 +216,21 @@ const ClubDetails = () => {
                 ) : (
                     <>
                         <h1>{club_name}</h1>
-                        <h3>{club_description}</h3>
+                        <h3>{club_description}</h3> 
+                        <h3> 
+                            Members:{" "}
+                            {users.length > 0 ? ( 
+                                users.map((user, index) => ( // Make these users link to the profiles later on
+                                    <span key={user.id}> 
+                                        {user.first_name} {user.last_name} 
+                                        {index < users.length - 1 && ", "}
+                                    </span> // ^ Comma after every user, EXCEPT the last one
+                                ))
+                            ) : (
+                                <span>None</span> // Print none if no users in the club
+                            )}
+                        </h3>
+
                     </>
                 )}
             </div>

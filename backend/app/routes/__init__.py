@@ -67,6 +67,13 @@ def get_club(club_id):
         'id': club.id,
         'club_name': club.name,
         'club_description': club.description,
+        'users': [
+            {
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name
+            } for user in club.users
+        ]
     }
     return jsonify(club_dict)
 
@@ -297,6 +304,5 @@ def get_clubs_for_user(user_id):
             'club_description': club.description,
         } for club in user.clubs
     ])
-
 
 import app.routes.authorize
