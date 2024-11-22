@@ -114,6 +114,8 @@ const ClubDetails = () => {
                 ));
                 setEditedCommentId(null);
                 setEditedComment('');
+                alert("Comment edited successfully");
+                window.location.reload(); // Refresh the page
             } else {
                 console.log("Error editing comment");
             }
@@ -234,10 +236,10 @@ const ClubDetails = () => {
                                 <span>None</span> // Print none if no users in the club
                             )}
                         </h3>
-
                     </>
                 )}
             </div>
+            <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button>
             <h4>Comments: </h4>
             <ul>
                 {comments.map((comment) => (
@@ -285,7 +287,6 @@ const ClubDetails = () => {
                 />
                 <button type="submit">Submit</button>
             </form>
-            <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button>
         </div>
     );
 };
