@@ -148,6 +148,7 @@ class Comment(Model):
     comment: Mapped[str]
     #user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
     club_id: Mapped[int] = mapped_column(Integer, ForeignKey('club.id'))
+    creator_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
 
     # Add similar relationships to the Club and User sections
     #user = relationship("User", back_populates='comments')
