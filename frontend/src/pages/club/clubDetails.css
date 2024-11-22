@@ -5,7 +5,7 @@
     padding: 20px;
     margin: 20px auto;
     max-width: 800px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -128,6 +128,81 @@ h3 {
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    height: 100vh; 
+    height: 100%; 
 }
 
+.comments-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the comment cards horizontally */
+    gap: 5px; /* Space between individual comment cards */
+    overflow-y: auto; 
+    background-color: #f4f4f4; 
+}
+
+.comments-container h4 { /* The default h4 margins are wayyyy to big*/
+    margin-top: 2px;  
+    margin-bottom: 2px;
+}
+
+.comment-card {
+    background-color: #ffffff; 
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 1000px;
+    width: 100%;
+    border: 1px solid #ddd;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column; 
+    gap: 2px; /* Gap between username and comment text */
+}
+
+.comment-author {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #007bff; 
+}
+
+.comment-text {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.add-comment-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px; /* Space between form and comments */
+    width: 100%; 
+    max-width: 600px; 
+}
+
+.add-comment-form input {
+    width: 80%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.add-comment-form button {
+    width: 20%;
+    padding: 10px;
+    font-size: 1rem;
+    color: white;
+    background-color: #166E46; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+body {
+    background-color: #f4f4f4; /* Light gray background we had on events page, white is blasting out my eyes */
+    height: 100%
+}

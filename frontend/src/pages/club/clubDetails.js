@@ -185,6 +185,7 @@ const ClubDetails = () => {
     }, [clubId]);
 
     return (
+    <body class="page-specific">
         <div>
             <div className="main">
                 <Nav />
@@ -240,10 +241,21 @@ const ClubDetails = () => {
                 )}
             </div>
             <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button>
-            <h4>Comments: </h4>
-            <ul>
+            <div className="comments-container">
+                <h4>Comments:</h4>
+                <form className="add-comment-form" onSubmit={addComment}>
+                    <input
+                        type="text"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Add a comment"
+                        required
+                        className="form-input"
+                    />
+                    <button type="submit">Submit</button>
+                </form>
                 {comments.map((comment) => (
-                    <li key={comment.comment_id}>
+                    <div key={comment.comment_id} className="comment-card">
                         {editedCommentId === comment.comment_id ? (
                             <form onSubmit={editComment}>
                                 <input
@@ -252,42 +264,36 @@ const ClubDetails = () => {
                                     onChange={(e) => setEditedComment(e.target.value)}
                                     placeholder="Edit your comment"
                                     required
-                                    className="form-input"
                                 />
-                                <button type="submit">Save</button>
-                                <button type="button" onClick={() => setEditedCommentId(null)}>Cancel</button>
+                                <div>
+                                    <button type="submit">Save</button>
+                                    <button type="button" onClick={() => setEditedCommentId(null)}>Cancel</button>
+                                </div>
                             </form>
                         ) : (
                             <>
-                                <span><Link to={`/user/${comment.creator_id}`}>{comment.user.first_name} {comment.user.last_name}</Link>{}</span>
-                                <span>: {comment.comment}</span>
+                                <div className="comment-content">
+                                    <span className="comment-author">
+                                        <Link to={`/user/${comment.creator_id}`}>{comment.user.first_name} {comment.user.last_name}</Link>
+                                    </span>
+                                    <span className="comment-text">{comment.comment}</span>
+                                </div>
                                 {currentUser.id === comment.creator_id && (
-                                    <> 
+                                    <div>
                                         <button onClick={() => {
                                             setEditedCommentId(comment.comment_id);
                                             setEditedComment(comment.comment);
                                         }}>Edit</button>
                                         <button onClick={() => deleteComment(comment.comment_id)}>Delete</button>
-                                    </>
+                                    </div>
                                 )}
                             </>
                         )}
-                    </li>
+                    </div>
                 ))}
-            </ul>
-
-            <form className="add-comment-form" onSubmit={addComment}>
-                <input
-                    type="text"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Add a comment"
-                    required
-                    className="form-input"
-                />
-                <button type="submit">Submit</button>
-            </form>
+            </div>
         </div>
+    </body>
     );
 };
 
