@@ -116,7 +116,15 @@ def add_comment(club_id):
         new_comment = Comment(comment=comment_text, club_id=club_id, creator_id=creator_id) 
         session.add(new_comment)
         session.commit()
-        return {'comment_id': new_comment.comment_id, 'comment': new_comment.comment, 'creator_id': new_comment.creator_id}, 201
+        return {'comment_id': new_comment.comment_id, 
+                'comment': new_comment.comment, 
+                'creator_id': new_comment.creator_id, 
+                'user': {
+                    'id' : new_comment.user.id,
+                    'first_name': new_comment.user.first_name,
+                    'last_name': new_comment.user.last_name,
+                }
+        }, 201
     return {'error': 'Club not found'}, 404
 
 @app.route('/b/clubs/<int:club_id>/comments', methods=['GET'])
@@ -127,7 +135,12 @@ def get_comments(club_id):
         {
             'comment_id': comment.comment_id,
             'comment': comment.comment,
-            'creator_id': comment.creator_id
+            'creator_id': comment.creator_id,
+            'user': {
+                'id' : comment.user.id,
+                'first_name': comment.user.first_name,
+                'last_name': comment.user.last_name,
+            }
         } for comment in comments
     ]
 
