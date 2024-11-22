@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate, useParams, Link } from "react-router-dom";
 import './clubDetails.css';
 import Nav from '../../components/nav/nav';
+import { CurrentUser } from '../../App'
 import { useCurrentUser } from '../../auth/useCurrentUser';
 
 const ClubDetails = () => {
     const { clubId } = useParams();
     const navigate = useNavigate();
-    const { currentUser, setCurrentUser } = useCurrentUser();
-    
+    const { currentUser, setCurrentUser } = useContext(CurrentUser);
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
     const [comments, setComments] = useState([]);
@@ -18,6 +18,7 @@ const ClubDetails = () => {
     const [editedCommentId, setEditedCommentId] = useState('');
     const [isEditingClub, setIsEditingClub] = useState(false); 
     const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state starts out not open
+    
 
     // Im using a dropdown for the edit/delete for clubs, this keeps track if its open or not
     const toggleDropdown = () => {
@@ -77,7 +78,10 @@ const ClubDetails = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ comment: newComment }),
+                body: JSON.stringify({ 
+                    comment: newComment,
+                    creator_id: currentUser.id,
+                }),
             });
 
             if (response.ok) {
@@ -110,6 +114,8 @@ const ClubDetails = () => {
                 ));
                 setEditedCommentId(null);
                 setEditedComment('');
+                alert("Comment edited successfully");
+                window.location.reload(); // Refresh the page
             } else {
                 console.log("Error editing comment");
             }
@@ -179,6 +185,7 @@ const ClubDetails = () => {
     }, [clubId]);
 
     return (
+    <body class="page-specific">
         <div>
             <div className="main">
                 <Nav />
@@ -230,14 +237,25 @@ const ClubDetails = () => {
                                 <span>None</span> // Print none if no users in the club
                             )}
                         </h3>
-
                     </>
                 )}
             </div>
-            <h4>Comments:</h4>
-            <ul>
+            <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button>
+            <div className="comments-container">
+                <h4>Comments:</h4>
+                <form className="add-comment-form" onSubmit={addComment}>
+                    <input
+                        type="text"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        placeholder="Add a comment"
+                        required
+                        className="form-input"
+                    />
+                    <button type="submit">Submit</button>
+                </form>
                 {comments.map((comment) => (
-                    <li key={comment.comment_id}>
+                    <div key={comment.comment_id} className="comment-card">
                         {editedCommentId === comment.comment_id ? (
                             <form onSubmit={editComment}>
                                 <input
@@ -246,38 +264,36 @@ const ClubDetails = () => {
                                     onChange={(e) => setEditedComment(e.target.value)}
                                     placeholder="Edit your comment"
                                     required
-                                    className="form-input"
                                 />
-                                <button type="submit">Save</button>
-                                <button type="button" onClick={() => setEditedCommentId(null)}>Cancel</button>
+                                <div>
+                                    <button type="submit">Save</button>
+                                    <button type="button" onClick={() => setEditedCommentId(null)}>Cancel</button>
+                                </div>
                             </form>
                         ) : (
                             <>
-                                <span>{comment.comment}</span>
-                                <button onClick={() => {
-                                    setEditedCommentId(comment.comment_id);
-                                    setEditedComment(comment.comment);
-                                }}>Edit</button>
-                                <button onClick={() => deleteComment(comment.comment_id)}>Delete</button>
+                                <div className="comment-content">
+                                    <span className="comment-author">
+                                        <Link to={`/user/${comment.creator_id}`}>{comment.user.first_name} {comment.user.last_name}</Link>
+                                    </span>
+                                    <span className="comment-text">{comment.comment}</span>
+                                </div>
+                                {currentUser.id === comment.creator_id && (
+                                    <div>
+                                        <button onClick={() => {
+                                            setEditedCommentId(comment.comment_id);
+                                            setEditedComment(comment.comment);
+                                        }}>Edit</button>
+                                        <button onClick={() => deleteComment(comment.comment_id)}>Delete</button>
+                                    </div>
+                                )}
                             </>
                         )}
-                    </li>
+                    </div>
                 ))}
-            </ul>
-
-            <form className="add-comment-form" onSubmit={addComment}>
-                <input
-                    type="text"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Add a comment"
-                    required
-                    className="form-input"
-                />
-                <button type="submit">Submit</button>
-            </form>
-            <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button>
+            </div>
         </div>
+    </body>
     );
 };
 
