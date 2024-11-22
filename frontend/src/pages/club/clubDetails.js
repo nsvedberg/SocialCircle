@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate, useParams, Link } from "react-router-dom";
 import './clubDetails.css';
 import Nav from '../../components/nav/nav';
+import { CurrentUser } from '../../App'
 import { useCurrentUser } from '../../auth/useCurrentUser';
 
 const ClubDetails = () => {
     const { clubId } = useParams();
     const navigate = useNavigate();
-    const { currentUser, setCurrentUser } = useCurrentUser();
-    
+    const { currentUser, setCurrentUser } = useContext(CurrentUser);
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
     const [comments, setComments] = useState([]);
@@ -18,6 +18,7 @@ const ClubDetails = () => {
     const [editedCommentId, setEditedCommentId] = useState('');
     const [isEditingClub, setIsEditingClub] = useState(false); 
     const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state starts out not open
+    
 
     // Im using a dropdown for the edit/delete for clubs, this keeps track if its open or not
     const toggleDropdown = () => {
@@ -77,7 +78,10 @@ const ClubDetails = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ comment: newComment }),
+                body: JSON.stringify({ 
+                    comment: newComment,
+                    creator_id: currentUser.id,
+                }),
             });
 
             if (response.ok) {
@@ -234,7 +238,7 @@ const ClubDetails = () => {
                     </>
                 )}
             </div>
-            <h4>Comments:</h4>
+            <h4>Comments: </h4>
             <ul>
                 {comments.map((comment) => (
                     <li key={comment.comment_id}>
@@ -253,12 +257,17 @@ const ClubDetails = () => {
                             </form>
                         ) : (
                             <>
-                                <span>{comment.comment}</span>
-                                <button onClick={() => {
-                                    setEditedCommentId(comment.comment_id);
-                                    setEditedComment(comment.comment);
-                                }}>Edit</button>
-                                <button onClick={() => deleteComment(comment.comment_id)}>Delete</button>
+                                <span><Link to={`/user/${comment.creator_id}`}>User{comment.creator_id}</Link>{}</span>
+                                <span>: {comment.comment}</span>
+                                {currentUser.id === comment.creator_id && (
+                                    <> 
+                                        <button onClick={() => {
+                                            setEditedCommentId(comment.comment_id);
+                                            setEditedComment(comment.comment);
+                                        }}>Edit</button>
+                                        <button onClick={() => deleteComment(comment.comment_id)}>Delete</button>
+                                    </>
+                                )}
                             </>
                         )}
                     </li>
