@@ -257,7 +257,7 @@ const ClubDetails = () => {
                             </form>
                         ) : (
                             <>
-                                <span><Link to={`/user/${comment.creator_id}`}>User{comment.creator_id}</Link>{}</span>
+                                <span><Link to={`/user/${comment.creator_id}`}>{comment.user.first_name} {comment.user.last_name}</Link>{}</span>
                                 <span>: {comment.comment}</span>
                                 {currentUser.id === comment.creator_id && (
                                     <> 

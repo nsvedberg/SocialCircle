@@ -61,6 +61,8 @@ class User(Model):
         secondary=club_user_relationship, back_populates="users"
     )
 
+    comments: Mapped[List[Comment]] = relationship("Comment", back_populates="user")
+
     def init(self, email, first_name, last_name, interests):
         self.email = email
         self.password_hash = None
@@ -151,7 +153,7 @@ class Comment(Model):
     creator_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
 
     # Add similar relationships to the Club and User sections
-    #user = relationship("User", back_populates='comments')
+    user = relationship("User", back_populates='comments')
     club = relationship("Club", back_populates='comments')
     
     def init(self, comment, club_id):
