@@ -48,15 +48,37 @@ const ClubDetails = () => {
             });
 
             if (response.ok) {
+                getClubDetails(); //refresh club data after user joins
                 const updatedUser = await response.json();
                 console.log("Successfully joined the club:", updatedUser);
-                alert("You have successfully joined the group chat!");
             } else {
                 console.log("Failed to join the club");
                 alert("There was an error joining the group chat. Please try again.");
             }
         } catch (error) {
             console.log("Error joining the club:", error);
+        }
+    };
+
+    const handleLeaveChat = async () => {
+        try {
+            const response = await fetch(`/b/users/${currentUser.id}/remove-from-club/${clubId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                getClubDetails(); //refresh data after user leaves
+                const updatedUser = await response.json();
+                console.log("Successfully left the club:", updatedUser);
+            } else {
+                console.log("Failed to leave the club");
+                alert("There was an error leaving the club. Please try again.");
+            }
+        } catch (error) {
+            console.log("Error leaving the club:", error);
         }
     };
 
@@ -114,8 +136,9 @@ const ClubDetails = () => {
                 ));
                 setEditedCommentId(null);
                 setEditedComment('');
+                getComments(); // retreive comments again instead of refreshing the page
                 alert("Comment edited successfully");
-                window.location.reload(); // Refresh the page
+                // window.location.reload(); // Refresh the page
             } else {
                 console.log("Error editing comment");
             }
@@ -128,8 +151,9 @@ const ClubDetails = () => {
         try {
             const response = await fetch(`/b/clubs/${clubId}/comments/${commentId}/delete`, { method: 'DELETE' });
             if (response.ok) {
+                await getComments(); // retreive comments again instead of refreshing the page
                 alert("Comment deleted successfully");
-                window.location.reload(); // Refresh the page and the comment should be gone
+                //window.location.reload(); // Refresh the page and the comment should be gone
             } else {
                 console.log("Error deleting comment");
             }
@@ -221,7 +245,7 @@ const ClubDetails = () => {
                         <button type="button" onClick={() => setIsEditingClub(false)}>Cancel</button>
                     </form>
                 ) : (
-                    <>
+                    <> 
                         <h1>{club_name}</h1>
                         <h3>{club_description}</h3> 
                         <h3> 
@@ -240,7 +264,12 @@ const ClubDetails = () => {
                     </>
                 )}
             </div>
-            <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button>
+            <div>
+                {users.some(user => user.id === currentUser.id) ?  // If the currentUser is part of the club, then show the leave club option.
+                    <button className="leave-chat-btn" onClick={handleLeaveChat}>Leave club</button> :
+                    <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button> // This logic also only shows the join button if the user is not already in club. Fixes error where you could join many times
+                }
+            </div>
             <div className="comments-container">
                 <h4>Comments:</h4>
                 <form className="add-comment-form" onSubmit={addComment}>
