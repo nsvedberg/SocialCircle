@@ -308,6 +308,19 @@ def add_user_to_club(user_id, club_id):
         'is_active': user.is_active,
     })
 
+@app.route('/b/users/<int:user_id>/remove-from-club/<int:club_id>', methods=['DELETE'])
+def remove_user_from_club(user_id, club_id):
+    session = Session()
+    user = session.query(User).get(user_id)
+    club = session.query(Club).get(club_id)
+    user.clubs.remove(club) 
+    #club.users.remove(user) # Optionally you can use this line instead of the one above, but not both, otherwise club_user_relationship will have two deletion attempts
+    session.commit()
+    return jsonify({
+        'user_id': user.id,
+        'club_id': club.id,
+    })
+
 @app.route('/b/users/<int:user_id>/clubs', methods=['GET'])
 def get_clubs_for_user(user_id):
     session = Session()
