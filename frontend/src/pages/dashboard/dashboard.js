@@ -16,11 +16,11 @@ const Dashboard = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (term) => {
     try {
-      const data = await fetch(`/b/events?search=${searchTerm}`);
+      const data = await fetch(`/b/events/name/${term}`);
       const eventData = await data.json();
-      setEvents(eventData);
+      setEvents(Array.isArray(eventData) ? eventData : [eventData]);
     } catch (error) {
       console.error('Error searching for events:', error);
     }
