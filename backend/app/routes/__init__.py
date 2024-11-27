@@ -14,7 +14,8 @@ def create_club():
     session = Session()
     data = request.get_json()
     new_club = Club(name=data['club_name'],
-                    description=data['club_description'])
+                    description=data['club_description'],
+                    email=data['club_email'])
     session.add(new_club)
     session.commit()
     return jsonify(new_club)
@@ -27,6 +28,7 @@ def get_all_clubs():
             'id': club.id,
             'club_name': club.name,
             'club_description': club.description,
+            'club_email': club.email,
         } for club in clubs
     ])
 
@@ -67,6 +69,7 @@ def get_club(club_id):
         'id': club.id,
         'club_name': club.name,
         'club_description': club.description,
+        'club_email': club.email,
         'users': [
             {
                 'id': user.id,
@@ -99,10 +102,12 @@ def update_club(club_id):
         return jsonify({'error': 'Club not found'}), 404  # Handle club not found
     club.name = data['club_name']
     club.description = data['club_description']
+    club.email = data['club_email']
     session.commit()
     return jsonify({
         'club_name': club.name,
-        'club_description': club.description
+        'club_description': club.description,
+        'club_email': club.email,
     })
 
 @app.route('/b/clubs/<int:club_id>/comments', methods=['POST'])

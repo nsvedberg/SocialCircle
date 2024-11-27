@@ -73,16 +73,6 @@ const CreateClub = () => {
                 />
             </div>
             <div className="form-group">
-                <label htmlFor="clubPresident">Club President</label>
-                <input
-                    type="text"
-                    id="clubPresident"
-                    value={clubPresident}
-                    onChange={(e) => setClubPresident(e.target.value)}
-                    className="form-input"
-                />
-            </div>
-            <div className="form-group">
                 <label htmlFor="clubEmail">Club Email</label>
                 <input
                     type="text"
@@ -99,16 +89,6 @@ const CreateClub = () => {
                     id="clubTags"
                     value={clubTags}
                     onChange={(e) => setClubTags(e.target.value)}
-                    className="form-input"
-                />
-            </div>
-            <div className="form-group">
-                <label htmlFor="clubMembers">Club Members</label>
-                <input
-                    type="text"
-                    id="clubMembers"
-                    value={clubMembers}
-                    onChange={(e) => setClubMembers(e.target.value)}
                     className="form-input"
                 />
             </div>
