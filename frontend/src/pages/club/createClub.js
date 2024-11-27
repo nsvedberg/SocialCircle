@@ -18,10 +18,8 @@ const CreateClub = () => {
         const data = {
             club_name: clubName,
             club_description: clubDescription,
-            club_president: clubPresident,
             club_email: clubEmail,
             club_tags: clubTags,
-            club_members: clubMembers,
         };
 
         const url = "/b/clubs/new";
