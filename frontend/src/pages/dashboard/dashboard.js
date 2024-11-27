@@ -18,12 +18,15 @@ const Dashboard = () => {
 
   const handleSearch = async (term) => {
     try {
-      const response = await fetch(`/b/events/name/${term}`);
+      //searchTerm = JSON.stringify(term)
+      console.log(term)
+      console.log(searchTerm)
+      const response = await fetch(`/b/clubs/name/${searchTerm}`);
       const eventData = await response.json();
-      setEvents(Array.isArray(eventData) ? eventData : [eventData]);
+      setEvents(Array.isArray(eventData) ? eventData : [eventData]); // Ensure data is in array form
     } catch (error) {
-      console.error('Error searching for events:', error);
-      setEvents([]);
+      console.error('Error searching for club:', error);
+      setEvents([]); // If there's an error, show no clubs
     }
   };
 
