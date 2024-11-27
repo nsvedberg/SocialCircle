@@ -84,9 +84,10 @@ def get_event_by_name(event_name):
     for event in events:
         event_list.append({
             'id': event.id,
-            'event_name': event.name,
-            'event_description': event.description,
+            'event_name': event.event_name,
+            'event_description': event.event_description,
         })
+        return jsonify(event_list)
     
 
 @app.route('/b/clubs/<int:club_id>', methods=['GET'])

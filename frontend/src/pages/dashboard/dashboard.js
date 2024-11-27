@@ -18,11 +18,12 @@ const Dashboard = () => {
 
   const handleSearch = async (term) => {
     try {
-      const data = await fetch(`/b/events/name/${term}`);
-      const eventData = await data.json();
+      const response = await fetch(`/b/events/name/${term}`);
+      const eventData = await response.json();
       setEvents(Array.isArray(eventData) ? eventData : [eventData]);
     } catch (error) {
       console.error('Error searching for events:', error);
+      setEvents([]);
     }
   };
 
