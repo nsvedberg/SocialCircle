@@ -61,7 +61,7 @@ def get_club_by_name(club_name):
         
     return jsonify(club_list)
 
-@app.route('/b/events/name/<int:event_name>', methods=['GET'])
+@app.route('/b/events/name/<string:event_name>', methods=['GET'])
 def get_event_by_name(event_name):
     session = Session()
     # Query the event by name
@@ -69,10 +69,10 @@ def get_event_by_name(event_name):
     
     conditions = []
     for letter in my_list:
-       conditions.append(Event.name.ilike(f"%{letter}%"))
+       conditions.append(Event.event_name.ilike(f"%{letter}%"))
         
     
-    events = session.query(Event).filter(Event.name.ilike(f"%{event_name}%")).all()
+    events = session.query(Event).filter(Event.event_name.ilike(f"%{event_name}%")).all()
     
     if not events:  # Check if the list is empty
         print(f"No events found for the name: {event_name}")
