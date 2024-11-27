@@ -11,6 +11,7 @@ const ClubDetails = () => {
     const { currentUser, setCurrentUser } = useContext(CurrentUser);
     const [club_name, setName] = useState('');
     const [club_description, setDescription] = useState('');
+    const [club_email, setEmail] = useState('');
     const [comments, setComments] = useState([]);
     const [users, setUsers] = useState([]); // User list
     const [newComment, setNewComment] = useState('');
@@ -32,6 +33,7 @@ const ClubDetails = () => {
 
             setName(clubsData.club_name);
             setDescription(clubsData.club_description);
+            setEmail(clubsData.club_email);
             setUsers(clubsData.users);
         } catch {
             console.log("Error fetching club details");
@@ -186,7 +188,8 @@ const ClubDetails = () => {
                 },
                 body: JSON.stringify({ 
                     club_name, 
-                    club_description 
+                    club_description,
+                    club_email,
                 }),
             });
 
@@ -194,6 +197,7 @@ const ClubDetails = () => {
                 const updatedClub = await response.json();
                 setName(updatedClub.club_name);
                 setDescription(updatedClub.club_description);
+                setEmail(updatedClub.club_email);
                 setIsEditingClub(false); 
             } else {
                 console.log("Error editing club");
@@ -241,14 +245,22 @@ const ClubDetails = () => {
                             required
                             className="form-input"
                         />
+                        <textarea
+                            value={club_email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Club Email"
+                            required
+                            className="form-input"
+                        />
                         <button type="submit">Save</button>
                         <button type="button" onClick={() => setIsEditingClub(false)}>Cancel</button>
                     </form>
                 ) : (
                     <> 
                         <h1>{club_name}</h1>
-                        <h3>{club_description}</h3> 
-                        <h3> 
+                        <p>{club_description}</p> 
+                        <p>Email: {club_email}</p> 
+                        <p> 
                             Members:{" "}
                             {users.length > 0 ? ( 
                                 users.map((user, index) => ( // Make these users link to the profiles later on
@@ -260,7 +272,7 @@ const ClubDetails = () => {
                             ) : (
                                 <span>None</span> // Print none if no users in the club
                             )}
-                        </h3>
+                        </p>
                     </>
                 )}
             </div>
