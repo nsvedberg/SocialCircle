@@ -161,6 +161,7 @@ h3 {
     gap: 5px; /* Space between individual comment cards */
     overflow-y: auto; 
     background-color: #f4f4f4; 
+    padding-bottom: 60px; /* Padding so navbar doesn't overlap with last comment */
 }
 
 .comments-container h4 { /* The default h4 margins are wayyyy to big*/
