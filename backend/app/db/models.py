@@ -32,12 +32,49 @@ class Model(DeclarativeBase):
 
     pass
 
-club_user_relationship = Table(
-    "club_user_relationship",
+club_officer_relationship = Table(
+    "club_officer_relationship",
     Model.metadata,
     Column("user_id", ForeignKey("user.id")),
     Column("club_id", ForeignKey("club.id")),
 )
+
+club_member_relationship = Table(
+    "club_member_relationship",
+    Model.metadata,
+    Column("user_id", ForeignKey("user.id")),
+    Column("club_id", ForeignKey("club.id")),
+)
+
+user_interest_relationship = Table(
+    "user_interest_relationship",
+    Model.metadata,
+    Column("user_id", ForeignKey("user.id")),
+    Column("interest_id", ForeignKey("interest.id")),
+)
+
+club_interest_relationship = Table(
+    "club_interest_relationship",
+    Model.metadata,
+    Column("club_id", ForeignKey("club.id")),
+    Column("interest_id", ForeignKey("interest.id")),
+)
+
+event_interest_relationship = Table(
+    "event_interest_relationship",
+    Model.metadata,
+    Column("event_id", ForeignKey("event.id")),
+    Column("interest_id", ForeignKey("interest.id")),
+)
+
+class Interest(Model):
+
+    __tablename__ = 'interest'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    name: Mapped[str]
+    description: Mapped[str]
 
 class User(Model):
 
@@ -53,16 +90,23 @@ class User(Model):
 
     grad_year: Mapped[int]
 
-    interests: Mapped[str]
     bio: Mapped[str]
 
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    clubs: Mapped[List[Club]] = relationship(
-        secondary=club_user_relationship, back_populates="users"
+    officer_of: Mapped[List[Club]] = relationship(
+        secondary=club_officer_relationship, back_populates="officers"
     )
 
-    comments: Mapped[List[Comment]] = relationship("Comment", back_populates="user")
+    member_of: Mapped[List[Club]] = relationship(
+        secondary=club_member_relationship, back_populates="members"
+    )
+
+    interests: Mapped[List[Interest]] = relationship(
+        secondary=user_interest_relationship
+    )
+
+    comments: Mapped[List[Comment]] = relationship(back_populates="author")
 
     def get_by_email(email):
         """Get a user, given the email."""
@@ -89,17 +133,19 @@ class Club(Model):
     description: Mapped[str]
     email: Mapped[str]
 
-    users: Mapped[List[User]] = relationship(
-        secondary=club_user_relationship, back_populates="clubs"
+    officers: Mapped[List[User]] = relationship(
+        secondary=club_officer_relationship, back_populates="officer_of"
     )
 
-    # TODO: relationship to user for president & other club admins
-    # TODO: relationship to interests
-    comments: Mapped[List["Comment"]] = relationship("Comment", back_populates="club", cascade="all, delete-orphan") # This should delete all the comments when all clubs delelted
+    members: Mapped[List[User]] = relationship(
+        secondary=club_member_relationship, back_populates="member_of"
+    )
 
-    def init(self, name, description):
-        self.name = name
-        self.description = description
+    interests: Mapped[List[Interest]] = relationship(
+        secondary=club_interest_relationship
+    )
+
+    comments: Mapped[List["Comment"]] = relationship(back_populates="club")
 
 class Event(Model):
 
@@ -121,34 +167,26 @@ class Event(Model):
     # Assuming tags are a comma-separated string for now
     event_tags: Mapped[str] = mapped_column(String(255), nullable=True)  
 
-    # TODO: relationship to club, tags, etc...
+    interests: Mapped[List[Interest]] = relationship(
+        secondary=event_interest_relationship
+    )
 
-    def __init__(self, event_name, event_description, event_date, event_time,
-                 event_location, event_club=None, event_tags=None):
-        self.event_name = event_name
-        self.event_description = event_description
-        self.event_date = event_date
-        self.event_time = event_time
-        self.event_location = event_location
-        self.event_club = event_club
-        self.event_tags = event_tags
-
-# Comment model, commented for now (ironic lol) until I can test it when the single club page is built
 class Comment(Model):
-    __tablename__ = 'comments'
+    __tablename__ = 'comment'
     comment_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     comment: Mapped[str]
-    #user_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
-    club_id: Mapped[int] = mapped_column(Integer, ForeignKey('club.id'))
-    creator_id: Mapped[int] = mapped_column(Integer, ForeignKey('user.id'))
 
-    # Add similar relationships to the Club and User sections
-    user = relationship("User", back_populates='comments')
-    club = relationship("Club", back_populates='comments')
-    
-    def init(self, comment, club_id):
-        self.comment = comment
-        self.club_id = club_id
+    author_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    author: Mapped[User] = relationship("User", back_populates='comments')
+
+    club_id: Mapped[int] = mapped_column(ForeignKey("club.id"))
+    club: Mapped[Club] = relationship("Club", back_populates='comments')
+
+class InterestSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Interest
+        include_relationships = True
+        load_instance = True
 
 class UserSchema(SQLAlchemyAutoSchema):
     class Meta:

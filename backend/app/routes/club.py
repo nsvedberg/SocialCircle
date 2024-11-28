@@ -44,7 +44,7 @@ def create_club():
     session = Session()
     schema = ClubSchema()
     data = request.get_json()
-    new_club = schema.load(data)
+    new_club = schema.load(data, session=session)
     session.add(new_club)
     session.commit()
     return schema.dump(new_club)

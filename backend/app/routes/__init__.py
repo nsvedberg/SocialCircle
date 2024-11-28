@@ -8,6 +8,7 @@ from flask import Blueprint, abort, jsonify, request
 from app.routes.authorize import login_required
 
 import app.routes.authorize
-import app.routes.user
 import app.routes.club
 import app.routes.event
+import app.routes.interest
+import app.routes.user

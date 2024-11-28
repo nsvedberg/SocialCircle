@@ -24,7 +24,7 @@ def create_user():
     session = Session()
     schema = UserSchema()
     data = request.get_json()
-    new_user = schema.load(data)
+    new_user = schema.load(data, session=session)
     session.add(new_user)
     session.commit()
     return schema.dump(new_user)
