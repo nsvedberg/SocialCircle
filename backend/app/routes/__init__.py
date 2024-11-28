@@ -220,7 +220,16 @@ def create_event():
                       event_tags=data['event_tags'])
     session.add(new_event)
     session.commit()
-    return jsonify(new_event), 201
+    return jsonify({ # Explicitly return so I can add id for testing purposes
+        'id': new_event.id, # added id
+        'event_name': new_event.event_name,
+        'event_description': new_event.event_description,
+        'event_date': new_event.event_date,
+        'event_time': new_event.event_time,
+        'event_location': new_event.event_location,
+        'event_club': new_event.event_club,
+        'event_tags': new_event.event_tags,
+    }), 201
 
 @app.route('/b/events', methods=['GET'])
 def get_events():
