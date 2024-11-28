@@ -12,17 +12,28 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  const handleInputChange = (event) => {
-    setSearchTerm(event.target.value);
+  const handleInputChange = async(event) => {
+    const value = event.target.value
+    setSearchTerm(value);
+
+    if(value.trim() === ''){
+      getEvents();
+    } else{
+      await handleSearch(value);
+    }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = async (term) => {
     try {
-      const data = await fetch(`/b/events?search=${searchTerm}`);
-      const eventData = await data.json();
-      setEvents(eventData);
+      //searchTerm = JSON.stringify(term)
+      //console.log(term)
+      //console.log(searchTerm)
+      const response = await fetch(`/b/events/name/${term}`);
+      const eventData = await response.json();
+      setEvents(Array.isArray(eventData) ? eventData : [eventData]); // Ensure data is in array form
     } catch (error) {
-      console.error('Error searching for events:', error);
+      console.error('Error searching for club:', error);
+      setEvents([]); // If there's an error, show no clubs
     }
   };
 
@@ -57,10 +68,7 @@ const Dashboard = () => {
           placeholder="Search events..."
           className="search-bar"
         />
-        <button onClick={handleSearch} className="search-button">
-          Search
-        </button>
-
+        
         <button onClick={clearBar} className="clear-button">
           Clear
         </button>

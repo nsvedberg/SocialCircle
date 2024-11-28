@@ -49,6 +49,7 @@ def get_club_by_name(club_name):
         print(f"No clubs found for the name: {club_name}")
         return jsonify({'error': 'Club not found'}), 404
 
+
     # Create a list of dictionaries for each club found
     club_list = []
     for club in clubs:
@@ -60,6 +61,35 @@ def get_club_by_name(club_name):
         
     return jsonify(club_list)
 
+@app.route('/b/events/name/<string:event_name>', methods=['GET'])
+def get_event_by_name(event_name):
+    session = Session()
+    # Query the event by name
+    my_list = list(event_name)
+    
+    conditions = []
+    for letter in my_list:
+       conditions.append(Event.event_name.ilike(f"%{letter}%"))
+        
+    
+    events = session.query(Event).filter(Event.event_name.ilike(f"%{event_name}%")).all()
+    
+    if not events:  # Check if the list is empty
+        print(f"No events found for the name: {event_name}")
+        return jsonify({'error': 'Event not found'}), 404
+
+
+    # Create a list of dictionaries for each club found
+    event_list = []
+    for event in events:
+        event_list.append({
+            'id': event.id,
+            'event_name': event.event_name,
+            'event_description': event.event_description,
+        })
+    
+    return jsonify(event_list)
+    
 
 @app.route('/b/clubs/<int:club_id>', methods=['GET'])
 def get_club(club_id):
