@@ -10,6 +10,7 @@ import ChatList from './pages/chatList/ChatList';
 import Chatbot from './pages/message/Chatbot';
 import CreateClub from './pages/club/createClub';
 import ClubDetails from './pages/club/clubDetails';
+import EventDetails from './pages/event/eventDetails';
 import CreateEvent from './pages/event/createEvent';
 import Clubs from './pages/club/clubs';
 import User from './pages/user/user';
@@ -53,6 +54,7 @@ function App() {
             </RequireAuth>
           } />
           <Route path="/club/:clubId" element={<ClubDetails />} />
+          <Route path="/event/:eventId" element={<EventDetails />} />
         </Routes>
       </CurrentUser.Provider>
     </BrowserRouter>
