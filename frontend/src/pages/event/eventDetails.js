@@ -8,12 +8,16 @@ const EventDetails = () => {
     const { eventId } = useParams();
     const navigate = useNavigate();
     const { currentUser } = useContext(CurrentUser);
+
+    // State variables for event details
     const [event_name, setName] = useState('');
     const [event_description, setDescription] = useState('');
     const [event_location, setLocation] = useState('');
     const [event_time, setTime] = useState('');
+    const [event_date, setDate] = useState(''); // New state for event date
     const [isEditingEvent, setIsEditingEvent] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [isRSVPed, setRSVPed] = useState(false);
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -28,6 +32,7 @@ const EventDetails = () => {
             setDescription(eventData.event_description);
             setLocation(eventData.event_location);
             setTime(eventData.event_time);
+            setDate(eventData.event_date); // Set event date
         } catch {
             console.log("Error fetching event details");
         }
@@ -62,6 +67,7 @@ const EventDetails = () => {
                     event_description,
                     event_location,
                     event_time,
+                    event_date, // Include event date in the payload
                 }),
             });
 
@@ -71,6 +77,7 @@ const EventDetails = () => {
                 setDescription(updatedEvent.event_description);
                 setLocation(updatedEvent.event_location);
                 setTime(updatedEvent.event_time);
+                setDate(updatedEvent.event_date); // Update event date
                 setIsEditingEvent(false);
             } else {
                 console.log("Error editing event");
@@ -80,12 +87,34 @@ const EventDetails = () => {
         }
     };
 
+    const handleRSVP = async () => {
+        try {
+            const response = await fetch(`/b/events/${eventId}/rsvp`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user_id: currentUser.id,
+                }),
+            });
+
+            if (response.ok) {
+                setRSVPed(true);
+            } else {
+                console.log("Error RSVPing to the event");
+            }
+        } catch (error) {
+            console.log("Error RSVPing to the event:", error);
+        }
+    };
+
     useEffect(() => {
         getEventDetails();
     }, [eventId]);
 
     return (
-        <div className="event-details">
+        <div className="main">
             <Nav />
             <div className="dropdown-container">
                 <button className="dropdown-toggle" onClick={toggleDropdown}>
@@ -121,7 +150,14 @@ const EventDetails = () => {
                         required
                     />
                     <input
-                        type="datetime-local"
+                        type="date"
+                        value={event_date}
+                        onChange={(e) => setDate(e.target.value)}
+                        placeholder="Event Date"
+                        required
+                    />
+                    <input
+                        type="time"
                         value={event_time}
                         onChange={(e) => setTime(e.target.value)}
                         placeholder="Event Time"
@@ -135,7 +171,13 @@ const EventDetails = () => {
                     <h1>{event_name}</h1>
                     <p>{event_description}</p>
                     <p>Location: {event_location}</p>
+                    <p>Date: {event_date}</p>
                     <p>Time: {event_time}</p>
+                    {!isRSVPed ? (
+                        <button className="rsvp-button" onClick={handleRSVP}>RSVP</button>
+                    ) : (
+                        <p>You have successfully RSVPed!</p>
+                    )}
                 </>
             )}
         </div>
