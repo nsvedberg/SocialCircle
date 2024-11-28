@@ -18,7 +18,12 @@ def create_club():
                     email=data['club_email'])
     session.add(new_club)
     session.commit()
-    return jsonify(new_club)
+    return jsonify({
+        'id': new_club.id,  # Now we get get id for testing
+        'club_name': new_club.name,
+        'club_description': new_club.description,
+        'club_email': new_club.email
+    }), 201
 
 @app.route('/b/clubs', methods=['GET'])
 def get_all_clubs():
@@ -215,7 +220,7 @@ def create_event():
                       event_tags=data['event_tags'])
     session.add(new_event)
     session.commit()
-    return jsonify(new_event)
+    return jsonify(new_event), 201
 
 @app.route('/b/events', methods=['GET'])
 def get_events():
