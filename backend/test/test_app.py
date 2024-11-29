@@ -113,9 +113,83 @@ def test_create_view_edit_delete_event(client):
     # NOTE: This assertion will not work if you go into the delete section with TWO events in event list with this test name.
     assert b'Updated Test Event3' not in view_response.data 
 
+    
 # TODO: Club comment tests (I will do these)
 # TODO: User tests
-# TODO: Search tests
+
+def test_search_by_name(client):
+    # Create a club with a specific name
+    creation_response = client.post('/b/clubs/new', json={
+        'club_name': 'Test Club Search By Name',
+        'club_description': 'A description for name search',
+        'club_email': 'test@email.com'
+    })
+    created_club = creation_response.get_json()
+    club_id = created_club['id']  # Save the club ID for later use
+
+    # Search by name
+    search_term = 'Test Club Search By Name'
+    search_response = client.get(f'/b/clubs/name/{search_term}')
+    assert search_response.status_code == 200
+    search_results = search_response.get_json()
+    assert len(search_results) > 0
+    assert search_results[0]['club_name'] == 'Test Club Search By Name'
+    
+    # Check that the club ID is also correct
+    assert search_results[0]['id'] == club_id
+
+def test_search_by_id(client):
+    # Create a club with a specific ID
+    creation_response = client.post('/b/clubs/new', json={
+        'club_name': 'Test Club Search By ID',
+        'club_description': 'A description for ID search',
+        'club_email': 'idtest@email.com'
+    })
+    created_club = creation_response.get_json()
+    club_id = created_club['id']  # Save the club ID for later use
+
+    # Search by ID
+    search_response = client.get(f'/b/clubs/id/{club_id}')
+    assert search_response.status_code == 200
+    search_results = search_response.get_json()
+    assert len(search_results) == 1
+    assert search_results[0]['id'] == club_id
+    assert search_results[0]['club_name'] == 'Test Club Search By ID'
+
+def test_search_by_description(client):
+    # Create a club with a specific description
+    creation_response = client.post('/b/clubs/new', json={
+        'club_name': 'Test Club Search By Description',
+        'club_description': 'A description specifically for searching by description',
+        'club_email': 'descriptiontest@email.com'
+    })
+    created_club = creation_response.get_json()
+    club_id = created_club['id']  # Save the club ID for later use
+
+    # Search by description
+    search_term = 'description specifically for searching by description'
+    search_response = client.get(f'/b/clubs/description/{search_term}')
+    assert search_response.status_code == 200
+    search_results = search_response.get_json()
+    assert len(search_results) > 0
+    assert search_results[0]['club_description'] == 'A description specifically for searching by description'
+
+def test_search_no_results(client):
+    # Perform a search with a term that does not exist in the database
+    search_term = 'Non-existent club'
+    search_response = client.get(f'/b/clubs/name/{search_term}')
+    assert search_response.status_code == 404
+    error_response = search_response.get_json()
+    assert error_response['error'] == 'No clubs found'
+
+def test_search_invalid_attribute(client):
+    # Try searching with an invalid attribute (e.g., an attribute other than name, id, or description)
+    search_term = 'Some term'
+    search_response = client.get(f'/b/clubs/invalid/{search_term}')
+    assert search_response.status_code == 400
+    error_response = search_response.get_json()
+    assert error_response['error'] == 'Invalid search attribute'
+
 # TODO: Other feature tests (messaging, rsvp, reccomendations)?
 
 
