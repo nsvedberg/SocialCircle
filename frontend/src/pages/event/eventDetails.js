@@ -81,6 +81,8 @@ const EventDetails = () => {
                 setTime(updatedEvent.event_time);
                 setDate(updatedEvent.event_date); 
                 setIsEditingEvent(false);
+                window.location.reload();
+                navigate('/event/${eventId}')
             } else {
                 console.log("Error editing event");
             }
