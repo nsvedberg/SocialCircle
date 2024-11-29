@@ -70,7 +70,7 @@ def search_club_by_attribute(attribute, search_term):
     
     return jsonify(club_list)
 
-@app.route('/b/events/name/<string:attribute>/<string:event_name>', methods=['GET'])
+@app.route('/b/events/name/<string:attribute>/<string:search_term>', methods=['GET'])
 def get_event_by_name(attribute, search_term):
     session = Session()
     if attribute == 'name':

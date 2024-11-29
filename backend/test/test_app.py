@@ -210,6 +210,9 @@ def test_search_by_name(client):
 
     assert len(search_results) > 0
     assert search_results[0]['club_name'] == 'Test Club Search By Name'
+    
+    delete_response = client.delete(f'/b/clubs/{club_id}')
+    assert delete_response.status_code == 200
 
 
 def test_search_by_id(client):
@@ -238,6 +241,9 @@ def test_search_by_id(client):
     assert len(search_results) == 1  # Ensure exactly 1 result is returned
     assert search_results[0]['club_name'] == 'Test Club Search By ID'
     assert search_results[0]['club_description'] == 'A description for ID search'
+    
+    delete_response = client.delete(f'/b/clubs/{club_id}')
+    assert delete_response.status_code == 200
 
 
 def test_search_by_description(client):
@@ -267,6 +273,9 @@ def test_search_by_description(client):
     assert len(search_results) > 0  # Ensure some results are returned
     assert any(club['club_name'] == 'Test Club Search By Description' for club in search_results)
     assert any(club['club_description'] == 'A description for description search' for club in search_results)
+    
+    delete_response = client.delete(f'/b/clubs/{club_id}')
+    assert delete_response.status_code == 200
 
 def test_search_no_results(client):
     # Perform a search with a term that does not exist in the database
