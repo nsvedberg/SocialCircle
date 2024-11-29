@@ -34,19 +34,10 @@ credentials.
 In the future, I think it will make sense to create an additional database for
 production. For now, there is only one database.
 
-### Building the Frontend
-
-The frontend can be build with this command:
-
-    cd frontend
-    npm run build
-
-Then, all of the built files will be in the `build/` directory.
-
-By the way, while developing the frontend, you can also host it on its own
-like this:
-
-    npm start
+If you want to set up your own database, follow the steps outlined at
+https://wiki.archlinux.org/title/PostgreSQL, and set the `DATABASE_URL` to the
+URL for the database you have created. Note that there is no need to create
+tables, as the ORM will do this for you.
 
 ### Starting the Backend
 
@@ -55,8 +46,12 @@ To start the app:
     cd backend
     flask run
 
-By default, when running in develop mode (see the above `SCIRCLE_DEVELOP`
-environment parameter), Flask will host the built files from the frontend
-statically (using a relative path). This will only work if you have already
-built the frontend and will not update with changes you make until you re-build
-the frontend.
+### Starting the Frontend
+
+The frontend can be run with this command:
+
+    npm start
+
+The frontend includes a proxy to the backend, so while you are running this on
+your local device, both the frontend and the backend can be accessed from the
+same URL (by default with npm, `localhost:3000`).

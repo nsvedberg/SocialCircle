@@ -57,6 +57,12 @@ And install the configuration files:
     # ln -s /etc/uwsgi/apps-available/socialcircle.ini \
         /etc/uwsgi/apps-enabled/
 
+To connect to the database from foreign hosts, add this to the `pg_hba.conf`
+configuration file under `etc/postgresql/`:
+
+    hostssl socialcircle socialcircle 0.0.0.0/0 scram-sha-256
+    hostssl socialcircle socialcircle ::0/0 scram-sha-256
+
 After this, the service can be started like this:
 
     # systemctl daemon-reload
