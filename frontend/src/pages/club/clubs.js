@@ -51,39 +51,9 @@ const Clubs = () => {
   useEffect(() => {
     getClubs();
   }, []);
-
-  useEffect(() => {
-    // Close dropdown when clicking outside of it
-    const handleClickOutside = (event) => {
-      if (dropdownVisible && !event.target.closest('.dropdown')) {
-        setDropdownVisible(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, [dropdownVisible]);
-
-  // Toggle dropdown visibility
-  const myDropDown = () => {
-    setDropdownVisible((prev) => !prev);
-  };
-
+  
   return (
     <div className="clubs-body">
-      <div className="dropdown">
-        <button onClick={myDropDown} className="dropbtn">Dropdown</button>
-        {dropdownVisible && (
-          <div id="myDropdown" className="dropdown-content">
-            <a href="#">Link 1</a>
-            <a href="#">Link 2</a>
-            <a href="#">Link 3</a>
-          </div>
-        )}
-      </div>
-
       <div className="search-container">
         <input
           type="text"
