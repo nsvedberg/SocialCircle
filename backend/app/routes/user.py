@@ -35,6 +35,7 @@ def update_user(user_id):
     session = Session()
     schema = UserSchema()
     data = request.get_json()
+    print(data)
     user = session.query(User).get(user_id)
     schema.load(data, session=session, instance=user)
     session.commit()

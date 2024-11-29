@@ -1,33 +1,93 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './profile.css';
 import Nav from '../../components/nav/nav';
+import InterestSelector from '../../components/interest/interestSelector';
 import { useCurrentUser } from '../../auth/useCurrentUser';
 
 const Profile = () => {
-  let { currentUser, setCurrentUser } = useCurrentUser();
+  const { currentUser, setCurrentUser } = useCurrentUser();
 
-  console.log(currentUser);
+  const [formValues, setFormValues] = useState({
+    ...currentUser,
+    interests: [],
+  });
+
+  async function fetchInterest(id) {
+    const response = await fetch("/b/interests/" + id);
+
+    var body = await response.json();
+
+    if (response.ok) {
+      return body;
+    } else {
+      console.log("Error fetching interest " + id, body.error);
+      console.log(body.message);
+    }
+  }
+
+  useEffect(() => {
+    async function updateInterests() {
+      const interests = [];
+
+      for (const id of currentUser.interests) {
+        const data = await fetchInterest(id);
+        interests.push(data);
+      }
+
+      setFormValues((prev) => ({ ...prev, interests }));
+    }
+
+    setFormValues({
+      ...currentUser,
+      interests: []
+    });
+
+    updateInterests();
+  }, [currentUser]);
+
+  const removeInterest = (id) => {
+    setFormValues((prev) => ({
+      ...prev,
+      interests: prev.interests.filter((elem) => elem.id !== id),
+    }));
+  }
+
+  const addInterest = async (interest) => {
+    setFormValues((prev) => ({
+      ...prev,
+      interests: prev.interests.concat(interest)
+    }))
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(name);
-    console.log(value);
-    console.log({
-      ...currentUser,
-      [name]: value,
-    });
-    setCurrentUser({
-      ...currentUser,
-      [name]: value,
-    });
+
+    setFormValues({ ...formValues, [name]: value });
   };
 
   const handleSubmit = async (e) => {
+    console.log("Submitting ...");
+
     e.preventDefault();
 
     const formData = new FormData(e.target);
 
     const token = currentUser.token;
+    
+    const data = {
+      /* Special case: interests MUST be a list, even if it has 0 or 1 elements. */
+      interests: []
+    };
+
+    formData.forEach((value, key) => {
+      if (!data[key]) {
+        data[key] = value;
+      } else if (Array.isArray(data[key])) {
+        data[key].push(value);
+      } else {
+        data[key] = [data[key], value];
+      }
+    });
 
     const response = await fetch("/b/users/" + currentUser.id, {
       method: "PUT",
@@ -35,17 +95,14 @@ const Profile = () => {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
       },
-      body: JSON.stringify(Object.fromEntries(formData)),
+      body: JSON.stringify(data),
     });
 
     var body = await response.json();
 
     if (response.ok) {
-      console.log("Successfully updated profile.");
-
       body.token = currentUser.token;
       setCurrentUser(body);
-
     } else {
       console.log("Error updating user " + currentUser.id, body.error);
       console.log(body.message);
@@ -67,7 +124,7 @@ const Profile = () => {
             type='text'
             id='email'
             name='email'
-            value={currentUser.email}
+            value={formValues.email}
             onChange={handleInputChange}
           />
         </div>
@@ -77,7 +134,7 @@ const Profile = () => {
             type='text'
             id='first-name'
             name='first_name'
-            value={currentUser.first_name}
+            value={formValues.first_name}
             onChange={handleInputChange}
           />
         </div>
@@ -87,14 +144,14 @@ const Profile = () => {
             type='text'
             id='last-name'
             name='last_name'
-            value={currentUser.last_name}
+            value={formValues.last_name}
             onChange={handleInputChange}
           />
         </div>
         <div className='form-group'>
           <label htmlFor='grad-year'>Year of Graduation:</label>
           <select id='grad-year' name='grad_year'>
-            <option selected="selected">{currentUser.grad_year}</option>
+            <option>{formValues.grad_year}</option>
             <option disabled="disabled">--</option>
             <option>2024</option>
             <option>2025</option>
@@ -107,20 +164,17 @@ const Profile = () => {
         </div>
         <div className='form-group'>
           <label htmlFor='interests'>Interests:</label>
-          <input
-            type='text'
-            id='interests'
-            name='interests'
-            value={currentUser.interests}
-            onChange={handleInputChange}
-          />
+          <InterestSelector
+            interests={formValues.interests}
+            addInterest={addInterest}
+            removeInterest={removeInterest}/>
         </div>
         <div className='form-group'>
           <label htmlFor='bio'>Bio:</label>
           <textarea
             id='bio'
             name='bio'
-            value={currentUser.bio}
+            value={formValues.bio}
             onChange={handleInputChange}
           ></textarea>
         </div>
