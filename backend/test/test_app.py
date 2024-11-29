@@ -27,7 +27,10 @@ def test_create_view_edit_delete_club(client):
     creation_response = client.post('/b/clubs/new', json={
         'club_name': 'Test Club',
         'club_description': 'A test description',
-        'club_email': 'Test email'
+        'club_email': 'Test email',
+        'club_creator': {
+            'id': 1  
+        }
     })
     created_club = creation_response.get_json()
     club_id = created_club['id'] # Save this id, we will use the same club for the edited and delete tests
