@@ -116,8 +116,71 @@ def test_create_view_edit_delete_event(client):
     # NOTE: This assertion will not work if you go into the delete section with TWO events in event list with this test name.
     assert b'Updated Test Event3' not in view_response.data 
 
-    
-# TODO: Club comment tests (I will do these)
+# Test comments
+def test_create_edit_delete_comments(client):
+    # Create a club to put comments on, using same code from club tests
+    club_response = client.post('/b/clubs/new', json={
+        'club_name': 'Test Club',
+        'club_description': 'A test description',
+        'club_email': 'Test email',
+        'club_creator': {
+            'id': 1
+        }
+    })
+
+    assert club_response.status_code == 201
+    created_club = club_response.get_json()
+    club_id = created_club['id']
+
+    # Test comment creation
+    comment_creation_response = client.post(f'/b/clubs/{club_id}/comments', json={
+        'comment': 'Test comment',
+        'creator_id': 3  # Assumes there is a user in db with id3, current its carol lee
+    })
+
+    assert comment_creation_response.status_code == 201
+    created_comment = comment_creation_response.get_json()
+    assert created_comment['comment'] == 'Test comment'
+    assert created_comment['creator_id'] == 3
+    assert created_comment['user']['first_name'] == 'Carol'  
+    assert created_comment['user']['last_name'] == 'Lee'
+
+    # get all comments for the club, check if the comment exists, and there is only one comment
+    comments_response = client.get(f'/b/clubs/{club_id}/comments')
+    assert comments_response.status_code == 200
+    comments = comments_response.get_json()
+    assert len(comments) == 1
+    assert comments[0]['comment'] == 'Test comment'
+    assert comments[0]['creator_id'] == 3
+
+    # Tst comment edit
+    comment_id = created_comment['comment_id']
+    comment_edit_response = client.post(f'/b/clubs/{club_id}/comments/{comment_id}/edit', json={
+        'comment': 'Updated test comment'
+    })
+    assert comment_edit_response.status_code == 200
+    updated_comment = comment_edit_response.get_json()
+    assert updated_comment['comment'] == 'Updated test comment'
+
+    # Test comment delete
+    comment_delete_response = client.delete(f'/b/clubs/{club_id}/comments/{comment_id}/delete')
+    assert comment_delete_response.status_code == 200
+
+    # Verify the comment deleteion was a success by checking if there are any more comments
+    comments_response_after_delete = client.get(f'/b/clubs/{club_id}/comments')
+    comments_after_delete = comments_response_after_delete.get_json()
+    assert len(comments_after_delete) == 0
+
+    # Delete the club that we created for this test
+    delete_response = client.delete(f'/b/clubs/{club_id}')
+    assert delete_response.status_code == 200
+    deleted_club = delete_response.get_json()
+    assert deleted_club['id'] == club_id 
+    assert deleted_club['club_name'] == 'Test Club' # Check that the deleted club was the club
+
+    # Check that the club no longer exists on the clubs list page
+    view_response = client.get('/b/clubs')
+    assert b'Updated Test Club' not in view_response.data 
 # TODO: User tests
 
 #Search Tests
