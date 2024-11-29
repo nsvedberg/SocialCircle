@@ -103,6 +103,7 @@ const EventDetails = () => {
 
             if (response.ok) {
                 setRSVPed(true);
+                getEventDetails();
             } else {
                 console.log("Error RSVPing to the event");
             }
