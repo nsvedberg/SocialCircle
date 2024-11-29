@@ -13,7 +13,7 @@ const ClubDetails = () => {
     const [club_description, setDescription] = useState('');
     const [club_email, setEmail] = useState('');
     const [comments, setComments] = useState([]);
-    const [users, setUsers] = useState([]); // User list
+    const [members, setMembers] = useState([]); // User list
     const [newComment, setNewComment] = useState('');
     const [editedComment, setEditedComment] = useState('');
     const [editedCommentId, setEditedCommentId] = useState('');
@@ -34,7 +34,7 @@ const ClubDetails = () => {
             setName(clubsData.club_name);
             setDescription(clubsData.club_description);
             setEmail(clubsData.club_email);
-            setUsers(clubsData.users);
+            setMembers(clubsData.members);
         } catch {
             console.log("Error fetching club details");
         }
@@ -42,7 +42,7 @@ const ClubDetails = () => {
 
     const handleJoinChat = async () => {
         try {
-            const response = await fetch(`/b/users/${currentUser.id}/add-to-club/${clubId}`, {
+            const response = await fetch(`/b/members/${currentUser.id}/add-to-club/${clubId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ const ClubDetails = () => {
 
     const handleLeaveChat = async () => {
         try {
-            const response = await fetch(`/b/users/${currentUser.id}/remove-from-club/${clubId}`, {
+            const response = await fetch(`/b/members/${currentUser.id}/remove-from-club/${clubId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
@@ -262,11 +262,11 @@ const ClubDetails = () => {
                         <p>Email: {club_email}</p> 
                         <p> 
                             Members:{" "}
-                            {users.length > 0 ? ( 
-                                users.map((user, index) => ( // Make these users link to the profiles later on
+                            {members.length > 0 ? ( 
+                                members.map((user, index) => ( // Make these users link to the profiles later on
                                     <span key={user.id}> 
                                         {user.first_name} {user.last_name} 
-                                        {index < users.length - 1 && ", "}
+                                        {index < members.length - 1 && ", "}
                                     </span> // ^ Comma after every user, EXCEPT the last one
                                 ))
                             ) : (
@@ -277,7 +277,7 @@ const ClubDetails = () => {
                 )}
             </div>
             <div>
-                {users.some(user => user.id === currentUser.id) ?  // If the currentUser is part of the club, then show the leave club option.
+                {members.some(user => user.id === currentUser.id) ?  // If the currentUser is part of the club, then show the leave club option.
                     <button className="leave-chat-btn" onClick={handleLeaveChat}>Leave club</button> :
                     <button className="join-chat-btn" onClick={handleJoinChat}>Join the group chat!</button> // This logic also only shows the join button if the user is not already in club. Fixes error where you could join many times
                 }

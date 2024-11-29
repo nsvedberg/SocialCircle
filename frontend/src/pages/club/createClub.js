@@ -16,12 +16,9 @@ const CreateClub = () => {
         e.preventDefault();
 
         const data = {
-            club_name: clubName,
-            club_description: clubDescription,
-            club_president: clubPresident,
-            club_email: clubEmail,
-            club_tags: clubTags,
-            club_members: clubMembers,
+            name: clubName,
+            description: clubDescription,
+            email: clubEmail,
         };
 
         const url = "/b/clubs/new";

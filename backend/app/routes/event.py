@@ -26,7 +26,7 @@ def create_event():
     session = Session()
     schema = EventSchema()
     data = request.get_json()
-    new_event = schema.load(event, session=session)
+    new_event = schema.load(data, session=session)
     session.add(new_event)
     session.commit()
     return schema.dump(new_event)

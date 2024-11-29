@@ -66,36 +66,20 @@ const Profile = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log("Submitting ...");
-
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    const formData = formValues;
+    formData.interests = formData.interests.map((x) => x.id);
 
     const token = currentUser.token;
     
-    const data = {
-      /* Special case: interests MUST be a list, even if it has 0 or 1 elements. */
-      interests: []
-    };
-
-    formData.forEach((value, key) => {
-      if (!data[key]) {
-        data[key] = value;
-      } else if (Array.isArray(data[key])) {
-        data[key].push(value);
-      } else {
-        data[key] = [data[key], value];
-      }
-    });
-
     const response = await fetch("/b/users/" + currentUser.id, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Authorization": "Bearer " + token
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formData),
     });
 
     var body = await response.json();

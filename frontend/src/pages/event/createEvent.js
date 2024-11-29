@@ -3,131 +3,125 @@ import Nav from '../../components/nav/nav';
 import './createEvent.css';
 import { useNavigate } from "react-router-dom";
 
+import { useCurrentUser } from '../../auth/useCurrentUser';
+
 const CreateEvent = () => {
-    const [eventName, setEventName] = useState('');
-    const [eventDescription, setEventDescription] = useState('');
-    const [eventDate, setEventDate] = useState('');
-    const [eventTime, setEventTime] = useState('');
-    const [eventLocation, setEventLocation] = useState('');
-    const [eventClub, setEventClub] = useState('');
-    const [eventTags, setEventTags] = useState('');
-    const navigate = useNavigate();
+  const { currentUser, setCurrentUser } = useCurrentUser();
 
-    const submit = async (e) => {
-        e.preventDefault();
+  const [formValues, setFormValues] = useState({
+    "name": "",
+    "description": "",
+  });
+  const navigate = useNavigate();
 
-        const data = {
-            event_name: eventName,
-            event_description: eventDescription,
-            event_date: eventDate,
-            event_time: eventTime,
-            event_location: eventLocation,
-            event_club: eventClub,
-            event_tags: eventTags,
-        };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
 
-        const url = "/b/events/new";
-        const options = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        try {
-            const response = await fetch(url, options);
-            if (response.status !== 201 && response.status !== 200) {
-                const responseData = await response.json();
-                alert(responseData.message);
-            } else {
-                navigate('/dashboard');
-            }
-        } catch (error) {
-            console.error('Error submitting the form:', error);
-            alert('Could not create the event. Please try again.');
-        }
-    };
+    console.log(formValues);
 
-    return (
-        <div>
-            <h1>Create a new event!</h1>
-            <Nav />
-            <form onSubmit={submit} className="create-event-form">
-                <div className="form-group">
-                    <label htmlFor="eventName">Event Name</label>
-                    <input
-                        type="text"
-                        id="eventName"
-                        value={eventName}
-                        onChange={(e) => setEventName(e.target.value)}
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="eventDescription">Event Description</label>
-                    <input
-                        type="text"
-                        id="eventDescription"
-                        value={eventDescription}
-                        onChange={(e) => setEventDescription(e.target.value)}
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="eventDate">Event Date</label>
-                    <input
-                        type="date"
-                        id="eventDate"
-                        value={eventDate}
-                        onChange={(e) => setEventDate(e.target.value)}
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="eventTime">Event Time</label>
-                    <input
-                        type="time"
-                        id="eventTime"
-                        value={eventTime}
-                        onChange={(e) => setEventTime(e.target.value)}
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="eventLocation">Event Location</label>
-                    <input
-                        type="text"
-                        id="eventLocation"
-                        value={eventLocation}
-                        onChange={(e) => setEventLocation(e.target.value)}
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="eventClub">Event Club</label>
-                    <input
-                        type="text"
-                        id="eventClub"
-                        value={eventClub}
-                        onChange={(e) => setEventClub(e.target.value)}
-                        className="form-input"
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="eventTags">Event Tags</label>
-                    <input
-                        type="text"
-                        id="eventTags"
-                        value={eventTags}
-                        onChange={(e) => setEventTags(e.target.value)}
-                        className="form-input"
-                    />
-                </div>
-                <button type="submit" className="create-event-button">Create Event</button>
-            </form>
+    const token = currentUser.token;
+
+    const response = await fetch("/b/events/new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
+      body: JSON.stringify(formValues),
+    });
+
+    const body = response.json();
+
+    if (response.ok) {
+      alert("Created event successfully!");
+    } else {
+      console.log("Error creating event", body.error);
+      console.log(body.message);
+
+      return null;
+    }
+  }
+
+  return (
+    <div>
+      <h1>Create a new event!</h1>
+      <Nav />
+      <form onSubmit={handleSubmit} className="create-event-form">
+        <div className="form-group">
+          <label htmlFor="event-name">Event Name</label>
+          <input
+            type="text"
+            id="event-name"
+            name="name"
+            value={formValues.name}
+            onChange={handleInputChange}
+            className="form-input"
+          />
         </div>
-    );
+        <div className="form-group">
+          <label htmlFor="event-description">Event Description</label>
+          <input
+            type="text"
+            id="event-description"
+            name="description"
+            value={formValues.description}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="event-date">Event Date</label>
+          <input
+            type="date"
+            id="event-date"
+            name="date"
+            value={formValues.date}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="event-time">Event Time</label>
+          <input
+            type="time"
+            id="event-time"
+            name="time"
+            value={formValues.time}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="event-location">Event Location</label>
+          <input
+            type="text"
+            id="event-location"
+            name="location"
+            value={formValues.location}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="event-club">Event Club</label>
+          <input
+            type="text"
+            id="event-club"
+            name="club"
+            value={formValues.club}
+            onChange={handleInputChange}
+            className="form-input"
+          />
+        </div>
+        <button type="submit" className="create-event-button">Create Event</button>
+      </form>
+    </div>
+  );
 };
 
 export default CreateEvent;

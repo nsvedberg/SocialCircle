@@ -145,27 +145,26 @@ class Club(Model):
         secondary=club_interest_relationship
     )
 
+    events: Mapped[List[Event]] = relationship(back_populates="club")
+
     comments: Mapped[List["Comment"]] = relationship(back_populates="club")
 
 class Event(Model):
 
     __tablename__ = 'event'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    event_name: Mapped[str] = mapped_column(String(255), nullable=False)
-    event_description: Mapped[str] = mapped_column(String(500), nullable=False)
-    event_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    description: Mapped[str] = mapped_column(String(500), nullable=False)
+    date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     # Assuming time is handled as a string like "12:30 PM"
-    event_time: Mapped[str] = mapped_column(String(10), nullable=False)
+    time: Mapped[str] = mapped_column(String(10), nullable=True)
     
-    event_location: Mapped[str] = mapped_column(String(255), nullable=False)
+    location: Mapped[str] = mapped_column(String(255), nullable=True)
 
-    # Can be optional if not supplied yet
-    event_club: Mapped[str] = mapped_column(String(255), nullable=True)  
-
-    # Assuming tags are a comma-separated string for now
-    event_tags: Mapped[str] = mapped_column(String(255), nullable=True)  
+    club_id: Mapped[int] = mapped_column(ForeignKey("club.id"), nullable=True)
+    club: Mapped[Club] = relationship(back_populates="events")
 
     interests: Mapped[List[Interest]] = relationship(
         secondary=event_interest_relationship
