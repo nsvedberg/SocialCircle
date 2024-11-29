@@ -17,6 +17,8 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import Integer, String, select, ForeignKey
 from sqlalchemy import Table
+from sqlalchemy import Text
+from sqlalchemy import Boolean
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -151,7 +153,6 @@ class Event(Model):
         self.event_club = event_club
         self.event_tags = event_tags
         
-# Comment model, commented for now (ironic lol) until I can test it when the single club page is built
 @dataclass
 class Comment(Model):
     __tablename__ = 'comments'
@@ -168,3 +169,14 @@ class Comment(Model):
     def init(self, comment, club_id):
         self.comment = comment
         self.club_id = club_id
+# Comment model, commented for now (ironic lol) until I can test it when the single club page is built
+@dataclass
+class Message(Model):
+    __tablename__ = 'messages'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    user_id: Mapped[int] = mapped_column(Integer, nullable=False)  # Add user_id field
+    groupchat_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
