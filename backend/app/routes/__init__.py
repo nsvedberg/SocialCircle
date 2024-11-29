@@ -239,12 +239,51 @@ def create_event():
 
 @app.route('/b/events', methods=['GET'])
 def get_events():
-    return Session().query(Event).all()
+    events = Session().query(Event).all()
+    return jsonify([
+        {
+            'id': event.id,
+            'event_name': event.event_name,
+            'event_description': event.event_description,
+            'event_date': event.event_date.isoformat(),
+            'event_time': event.event_time,
+            'event_location': event.event_location,
+            'event_club': event.event_club,
+            'event_tags': event.event_tags,
+            'users': [
+                {
+                    'id': user.id,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name
+                } for user in event.users
+            ]
+        } for event in events
+    ])
 
 @app.route('/b/events/<int:event_id>', methods=['GET'])
 def get_event(event_id):
-    event = Session().query(Event).get(event_id)
-    return jsonify(event)
+    session = Session()
+    event = session.query(Event).get(event_id)
+    if not event:
+        return jsonify({'error': 'Event not found'}), 404
+    
+    return jsonify({
+        'id': event.id,
+        'event_name': event.event_name,
+        'event_description': event.event_description,
+        'event_date': event.event_date.isoformat(),
+        'event_time': event.event_time,
+        'event_location': event.event_location,
+        'event_club': event.event_club,
+        'event_tags': event.event_tags,
+        'users': [
+            {
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name
+            } for user in event.users
+        ]  
+    })
 
 @app.route('/b/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
@@ -270,6 +309,27 @@ def update_event(event_id):
     return jsonify(event)
 
 #add in RSVP logic here!
+@app.route('/b/events/<int:event_id>/rsvp', methods=['POST'])
+def add_user_to_rsvp(event_id):
+    session = Session()
+    data = request.get_json()
+    user_id = data.get('user_id')
+    user = session.query(User).get(user_id)
+    event = session.query(Event).get(event_id)
+    if not user or not event:
+        return jsonify({'error': 'User or Event not found'}), 404
+    user.events.append(event)
+    session.commit()
+    return jsonify({
+        'id': user.id,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'grad_year': user.grad_year,
+        'interests': user.interests,
+        'bio': user.bio,
+        'is_active': user.is_active,
+    })
 
 @app.route('/b/users/new', methods=['POST'])
 def create_user():

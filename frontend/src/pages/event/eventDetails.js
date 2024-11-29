@@ -18,6 +18,7 @@ const EventDetails = () => {
     const [isEditingEvent, setIsEditingEvent] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [isRSVPed, setRSVPed] = useState(false);
+    const [users, setUsers] = useState([]); // User list
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -33,6 +34,7 @@ const EventDetails = () => {
             setLocation(eventData.event_location);
             setTime(eventData.event_time);
             setDate(eventData.event_date); // Set event date
+            setUsers(eventData.users);
         } catch {
             console.log("Error fetching event details");
         }
@@ -173,6 +175,19 @@ const EventDetails = () => {
                     <p>Location: {event_location}</p>
                     <p>Date: {event_date}</p>
                     <p>Time: {event_time}</p>
+                    <p> 
+                        Attending:{" "}
+                        {users.length > 0 ? ( 
+                            users.map((user, index) => ( 
+                                <span key={user.id}> 
+                                    {user.first_name} {user.last_name} 
+                                    {index < users.length - 1 && ", "}
+                                </span> // ^ Comma after every user, EXCEPT the last one
+                            ))
+                        ) : (
+                            <span>None</span> // Print none if no users rsvped
+                        )}
+                    </p>
                     {!isRSVPed ? (
                         <button className="rsvp-button" onClick={handleRSVP}>RSVP</button>
                     ) : (
