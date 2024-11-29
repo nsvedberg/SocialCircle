@@ -17,6 +17,8 @@ def create_club():
                     description=data['club_description'],
                     email=data['club_email'])
     session.add(new_club)
+    creator = session.query(User).get(data['club_creator']['id'])
+    new_club.users.append(creator) 
     session.commit()
     return jsonify({
         'id': new_club.id,  # Now we get get id for testing
