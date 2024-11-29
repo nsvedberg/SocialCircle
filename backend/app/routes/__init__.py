@@ -36,6 +36,13 @@ def get_all_clubs():
             'club_name': club.name,
             'club_description': club.description,
             'club_email': club.email,
+            'users': [
+            {
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name
+            } for user in club.users
+            ]
         } for club in clubs
     ])
 

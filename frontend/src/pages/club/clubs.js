@@ -107,7 +107,7 @@ const Clubs = () => {
           clubs.map((club, index) => (
             <div key={index} className="club-card">
               <h2>{club.club_name}</h2>
-              <p>Members: {club.Members}</p>
+              <p>Members: {club?.users?.length || 0}</p>
               <a href={`/club/${club.id}`} rel="noopener noreferrer">Visit Club</a>
             </div>
           ))
