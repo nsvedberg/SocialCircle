@@ -6,9 +6,10 @@ import './Chatbot.css';
 const Chatbot = () => {
   const { chatTitle } = useParams(); // chatTitle is used as the groupchat_name
   const [messages, setMessages] = useState([]);
+  const [userEmails, setUserEmails] = useState({});
   const [input, setInput] = useState('');
   const { currentUser, setCurrentUser } = useCurrentUser();
-  const userId = 1; // Hardcoded user_id for the current user
+  // Hardcoded user_id for the current user
 
   // Fetch messages from the database for the current groupchat on component mount
   useEffect(() => {
@@ -25,9 +26,31 @@ const Chatbot = () => {
       .catch((error) => console.error('Error fetching messages:', error));
   }, [chatTitle]);
 
+  // Fetch email for each user_id and cache it
+  useEffect(() => {
+    const uniqueUserIds = [...new Set(messages.map((msg) => msg.user_id))];
+    uniqueUserIds.forEach((id) => {
+      if (!userEmails[id]) {
+        fetch(`/b/users/${id}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to fetch user email for user_id: ${id}`);
+            }
+            return response.json();
+          })
+          .then((user) => {
+            setUserEmails((prev) => ({ ...prev, [id]: user.email }));
+          })
+          .catch((error) =>
+            console.error(`Error fetching user email for user_id ${id}:`, error)
+          );
+      }
+    });
+  }, [messages, userEmails]);
+
   const handleSend = () => {
     if (input.trim()) {
-      const newMessage = { text: input, user_id: userId }; // Include user_id
+      const newMessage = { text: input, user_id: currentUser.id }; // Include user_id
 
       // Add the new message to the database for the current groupchat
       fetch(`/b/messages/${chatTitle}/`, {
@@ -58,11 +81,13 @@ const Chatbot = () => {
         {messages.map((msg) => (
           <div
             key={msg.id}
-            className={`message ${msg.user_id === userId ? 'user' : 'bot'}`} // Align based on user_id
+            className={`message ${msg.user_id === currentUser.id ? 'user' : 'bot'}`}
           >
-            {msg.text}
+            <strong>
+              {userEmails[msg.user_id] || 'Loading email...'}
+            </strong>
             <br />
-          {currentUser.first_name + " " + currentUser.last_name}
+            {msg.text}
           </div>
         ))}
       </div>
