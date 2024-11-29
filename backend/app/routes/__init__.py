@@ -63,21 +63,22 @@ def search_club_by_attribute(attribute, search_term):
     
     return jsonify(club_list)
 
-@app.route('/b/events/name/<string:event_name>', methods=['GET'])
-def get_event_by_name(event_name):
+@app.route('/b/events/name/<string:attribute>/<string:event_name>', methods=['GET'])
+def get_event_by_name(attribute, search_term):
     session = Session()
-    # Query the event by name
-    my_list = list(event_name)
-    
-    conditions = []
-    for letter in my_list:
-       conditions.append(Event.event_name.ilike(f"%{letter}%"))
-        
-    
-    events = session.query(Event).filter(Event.event_name.ilike(f"%{event_name}%")).all()
+    if attribute == 'name':
+        events = session.query(Event).filter(Event.event_name.ilike(f"%{search_term}%")).all()
+    elif attribute == 'id':
+        events = session.query(Event).filter(Event.id == int(search_term)).all()
+    elif attribute == 'description':
+        events = session.query(Event).filter(Event.event_description.ilike(f"%{search_term}%")).all()
+    elif attribute == 'location':
+        events = session.query(Event).filter(Event.event_location.ilike(f"%{search_term}%")).all()
+    else:
+        return jsonify({'error': 'Invalid search attribute'}), 400
     
     if not events:  # Check if the list is empty
-        print(f"No events found for the name: {event_name}")
+        print(f"No events found for the name: {search_term}")
         return jsonify({'error': 'Event not found'}), 404
 
 
@@ -88,6 +89,7 @@ def get_event_by_name(event_name):
             'id': event.id,
             'event_name': event.event_name,
             'event_description': event.event_description,
+            'event_location' : event.event_location,
         })
     
     return jsonify(event_list)
