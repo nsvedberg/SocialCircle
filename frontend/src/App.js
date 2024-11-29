@@ -43,7 +43,7 @@ function App() {
               <Profile />
             </RequireAuth>
           } />
-          <Route path="/chat/:chatId" element={
+          <Route path="/chat/:chatTitle" element={
             <RequireAuth>
               <Chatbot />
             </RequireAuth>
