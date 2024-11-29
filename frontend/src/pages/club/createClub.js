@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState , useContext } from 'react';
 import Nav from '../../components/nav/nav';
 import './createClub.css';
 import { useNavigate } from "react-router-dom";
+import { CurrentUser } from '../../App'
 
 const CreateClub = () => {
     const [clubName, setClubName] = useState('');
@@ -10,6 +11,7 @@ const CreateClub = () => {
     const [clubEmail, setClubEmail] = useState('');
     const [clubTags, setClubTags] = useState('');
     const [clubMembers, setClubMembers] = useState('');
+    const { currentUser, setCurrentUser } = useContext(CurrentUser);
     const navigate = useNavigate();
 
     const submit = async (e) => {

@@ -49,8 +49,8 @@ const ChatList = () => {
       <h1>Messages</h1>
       <ul>
         {chats.map(chat => (
-          <li key={chat.id} className='chat-item'>
-            <Link to={`/chat/${chat.id}`} className='chat-link'>
+          <li key={chat.name} className='chat-item'>
+            <Link to={`/chat/${chat.name}`} className='chat-link'>
               <div className='chat-info'>
                 <h2>{chat.name}</h2>
                 <p>{chat.lastMessage}</p>

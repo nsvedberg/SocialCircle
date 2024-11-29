@@ -19,7 +19,7 @@ const ClubDetails = () => {
     const [editedCommentId, setEditedCommentId] = useState('');
     const [isEditingClub, setIsEditingClub] = useState(false); 
     const [dropdownOpen, setDropdownOpen] = useState(false); // Dropdown state starts out not open
-    
+    const [isCurrentUserCreator, setIsCurrentUserCreator] = useState(false); // This keeps track if the currentUser is the creator or the most senior club member if the creator leaves
 
     // Im using a dropdown for the edit/delete for clubs, this keeps track if its open or not
     const toggleDropdown = () => {
@@ -35,6 +35,8 @@ const ClubDetails = () => {
             setDescription(clubsData.club_description);
             setEmail(clubsData.club_email);
             setMembers(clubsData.members);
+            setIsCurrentUserCreator(currentUser.id === clubsData.members[0]?.id);
+            setUsers(clubsData.users);
         } catch {
             console.log("Error fetching club details");
         }
@@ -217,6 +219,7 @@ const ClubDetails = () => {
         <div>
             <div className="main">
                 <Nav />
+                {isCurrentUserCreator && (
                 <div className="dropdown-container">
                     <button className="dropdown-toggle" onClick={toggleDropdown}>
                         Options
@@ -227,7 +230,7 @@ const ClubDetails = () => {
                             <button onClick={deleteClub}>Delete Club</button>
                         </div>
                     )}
-                </div>
+                </div>)}
                 {isEditingClub ? (
                     <form onSubmit={editClub}>
                         <input

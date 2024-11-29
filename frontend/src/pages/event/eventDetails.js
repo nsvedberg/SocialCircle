@@ -67,7 +67,7 @@ const EventDetails = () => {
                     event_description,
                     event_location,
                     event_time,
-                    event_date, // Include event date in the payload
+                    event_date, 
                 }),
             });
 
@@ -77,7 +77,7 @@ const EventDetails = () => {
                 setDescription(updatedEvent.event_description);
                 setLocation(updatedEvent.event_location);
                 setTime(updatedEvent.event_time);
-                setDate(updatedEvent.event_date); // Update event date
+                setDate(updatedEvent.event_date); 
                 setIsEditingEvent(false);
             } else {
                 console.log("Error editing event");

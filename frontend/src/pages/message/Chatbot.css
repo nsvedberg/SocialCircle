@@ -1,59 +1,83 @@
-/* Chatbot.css */
 .chatbot {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .message-list {
-    flex: 1;
-    overflow-y: auto;
-    margin-bottom: 20px;
-  }
-  
-  .message {
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    max-width: 60%;
-  }
-  
-  .message.user {
-    background-color: #007bff;
-    color: white;
-    align-self: flex-end;
-  }
-  
-  .message.bot {
-    background-color: #f0f0f0;
-    color: black;
-    align-self: flex-start;
-  }
-  
-  .input-area {
-    display: flex;
-  }
-  
-  .input-area input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .input-area button {
-    padding: 10px;
-    margin-left: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .input-area button:hover {
-    background-color: #0056b3;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f8f8f8;
+}
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* General message styles */
+.message {
+  padding: 12px 16px;
+  border-radius: 20px;
+  max-width: 60%;
+  display: inline-block;
+  word-wrap: break-word;
+  font-size: 16px;
+  position: relative;
+}
+
+/* User (right-aligned) messages */
+.message.user {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 0;
+  text-align: right;
+}
+
+/* Bot (left-aligned) messages */
+.message.bot {
+  background-color: #e5e5ea;
+  color: black;
+  align-self: flex-start;
+  border-bottom-left-radius: 0;
+  text-align: left;
+}
+
+/* Add a slight shadow to messages for depth */
+.message.user, .message.bot {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Input area */
+.input-area {
+  display: flex;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ddd;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 16px;
+}
+
+.input-area button {
+  padding: 12px 20px;
+  margin-left: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.input-area button:hover {
+  background-color: #0056b3;
+}

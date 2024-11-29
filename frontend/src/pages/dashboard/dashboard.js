@@ -11,6 +11,16 @@ const Dashboard = () => {
   const [events, setEvents] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const [selectedSearchAttribute, setSelectedSearchAttribute] = useState('name'); // default search by name
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  
+  // List of items to show in the dropdown
+  const dropdownItems = [
+    'Name',
+    'ID',
+    'Description',
+    'Location',
+  ];
 
   const handleInputChange = async(event) => {
     const value = event.target.value
@@ -19,16 +29,16 @@ const Dashboard = () => {
     if(value.trim() === ''){
       getEvents();
     } else{
-      await handleSearch(value);
+      await handleSearch(value, selectedSearchAttribute);
     }
   };
 
-  const handleSearch = async (term) => {
+  const handleSearch = async (term, attribute) => {
     try {
       //searchTerm = JSON.stringify(term)
       //console.log(term)
       //console.log(searchTerm)
-      const response = await fetch(`/b/events/name/${term}`);
+      const response = await fetch(`/b/clubs/${attribute}/${term}`);
       const eventData = await response.json();
       setEvents(Array.isArray(eventData) ? eventData : [eventData]); // Ensure data is in array form
     } catch (error) {
@@ -56,6 +66,15 @@ const Dashboard = () => {
     getEvents();
   }, []);
 
+  const toggleDropdown = () => {
+    setDropdownVisible((prev) => !prev); // Toggle the visibility based on the previous state
+  };
+
+  // Set the selected search attribute
+  const handleDropdownSelection = (item) => {
+    setSelectedSearchAttribute(item.toLowerCase()); // Store the attribute in lowercase
+    setDropdownVisible(false); // Close the dropdown after selection
+  };
   return (
     <div className='body'>
       <UserBanner />
@@ -72,6 +91,19 @@ const Dashboard = () => {
         <button onClick={clearBar} className="clear-button">
           Clear
         </button>
+
+        <div className="dropdown">
+          <div className="dropdown-button" onClick={toggleDropdown}>Select an Item</div>
+          {dropdownVisible && (
+            <div className="dropdown-content">
+              {dropdownItems.map((item, index) => (
+                <div key={index} className="dropdown-item" onClick={() => handleDropdownSelection(item)}>
+                  {item}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <CreateEventButton /> {/* This button is only visible on the dashboard */}

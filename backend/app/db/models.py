@@ -16,6 +16,8 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
 from sqlalchemy import Integer, String, select, ForeignKey
 from sqlalchemy import Table
+from sqlalchemy import Text
+from sqlalchemy import Boolean
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -39,6 +41,7 @@ club_officer_relationship = Table(
     Column("club_id", ForeignKey("club.id")),
 )
 
+<<<<<<< HEAD
 club_member_relationship = Table(
     "club_member_relationship",
     Model.metadata,
@@ -65,6 +68,13 @@ event_interest_relationship = Table(
     Model.metadata,
     Column("event_id", ForeignKey("event.id")),
     Column("interest_id", ForeignKey("interest.id")),
+)
+
+event_user_relationship = Table(
+    "event_user_relationship",
+    Model.metadata,
+    Column("user_id", ForeignKey("user.id")),
+    Column("event_id", ForeignKey("event.id")),
 )
 
 class Interest(Model):
@@ -96,6 +106,10 @@ class User(Model):
 
     officer_of: Mapped[List[Club]] = relationship(
         secondary=club_officer_relationship, back_populates="officers"
+    )
+    
+    events: Mapped[List[Event]] = relationship(
+        secondary=event_user_relationship, back_populates="users"
     )
 
     member_of: Mapped[List[Club]] = relationship(
@@ -170,16 +184,20 @@ class Event(Model):
         secondary=event_interest_relationship
     )
 
+    users: Mapped[List[User]] = relationship(
+        secondary=event_user_relationship, back_populates="events"
+    )
+
 class Comment(Model):
     __tablename__ = 'comment'
     comment_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     comment: Mapped[str]
 
     author_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
-    author: Mapped[User] = relationship("User", back_populates='comments')
+    author: Mapped[User] = relationship(back_populates='comments')
 
     club_id: Mapped[int] = mapped_column(ForeignKey("club.id"))
-    club: Mapped[Club] = relationship("Club", back_populates='comments')
+    club: Mapped[Club] = relationship(back_populates='comments')
 
 class InterestSchema(SQLAlchemyAutoSchema):
     class Meta:
@@ -204,3 +222,12 @@ class EventSchema(SQLAlchemyAutoSchema):
         model = Event
         include_relationships = True
         load_instance = True
+
+class Message(Model):
+    __tablename__ = 'messages'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    text: Mapped[str] = mapped_column(Text, nullable=False)
+    user_id: Mapped[int] = mapped_column(Integer, nullable=False)  # Add user_id field
+    groupchat_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
