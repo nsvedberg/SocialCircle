@@ -98,7 +98,7 @@
     font-weight: bold;
   }
 
-.dropbtn {
+/* .dropbtn {
   background-color: #3498DB;
   color: white;
   padding: 16px;
@@ -134,6 +134,48 @@
   display: block;
 }
 
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {background-color: #ddd;} */
+
+.dropdown-button {
+  padding: 10px;
+  background-color: #2C6B2F; /* Darker green background for the button */
+  color: white; /* Text color for the button */
+  cursor: pointer;
+  border-radius: 5px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+/* Style for the dropdown menu */
+.dropdown-content {
+  display: none; /* Initially hidden */
+  position: absolute;
+  background-color: #1F1F1F; /* Very dark background color for the dropdown */
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4); /* Darker shadow */
+  z-index: 1;
+  border-radius: 5px;
+  margin-top: 5px;
+  color: white; /* Text color for the dropdown items */
+}
+
+/* Style each dropdown item */
+.dropdown-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  background-color: #333333; /* Darker gray background for items */
+  border-bottom: 1px solid #444444; /* Subtle darker border between items */
+}
+
+.dropdown-item:hover {
+  background-color: #555555; /* Darker gray on hover */
+}
+
+/* Show dropdown content when it's visible (controlled via state) */
+.dropdown .dropdown-content {
+  display: block; /* Make the dropdown content visible */
+}
+
+
 
 .show {display:block;}
