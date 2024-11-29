@@ -38,7 +38,7 @@ const Dashboard = () => {
       //searchTerm = JSON.stringify(term)
       //console.log(term)
       //console.log(searchTerm)
-      const response = await fetch(`/b/clubs/${attribute}/${term}`);
+      const response = await fetch(`/b/events/name/${attribute}/${term}`);
       const eventData = await response.json();
       setEvents(Array.isArray(eventData) ? eventData : [eventData]); // Ensure data is in array form
     } catch (error) {
