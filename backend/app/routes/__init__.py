@@ -1,7 +1,7 @@
 from operator import and_
 from app import app
 from app.db.session import Session
-from app.db.models import Club, Event, User, Comment
+from app.db.models import Club, Event, User, Comment, Message
 
 from flask import Blueprint, abort, jsonify, request
 
@@ -380,5 +380,44 @@ def get_clubs_for_user(user_id):
             'club_description': club.description,
         } for club in user.clubs
     ])
+
+@app.route('/b/messages/', methods=['GET'])
+def get_all_messages():
+    session = Session()
+    messages = session.query(Message).order_by(Message.created_at).all()
+    return jsonify([
+        {
+            'id': message.id,
+            'text': message.text,
+            'is_user': message.is_user,
+            'created_at': message.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+        } for message in messages
+    ])
+
+# Route to add a new message
+@app.route('/b/messages/', methods=['POST'])
+def add_message():
+    session = Session()
+    data = request.get_json()
+
+    if not data or 'text' not in data or 'is_user' not in data:
+        return jsonify({'error': 'Invalid input'}), 400
+
+    new_message = Message(
+        text=data['text'],
+        is_user=data['is_user'],
+    )
+    session.add(new_message)
+    session.commit()
+
+    return jsonify({
+        'id': new_message.id,
+        'text': new_message.text,
+        'is_user': new_message.is_user,
+        'created_at': new_message.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+    }), 201
+
+
+
 
 import app.routes.authorize
