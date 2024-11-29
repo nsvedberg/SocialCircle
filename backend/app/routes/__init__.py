@@ -39,33 +39,28 @@ def get_all_clubs():
         } for club in clubs
     ])
 
-@app.route('/b/clubs/name/<string:club_name>', methods=['GET'])
-def get_club_by_name(club_name):
+@app.route('/b/clubs/<string:attribute>/<string:search_term>', methods=['GET'])
+def search_club_by_attribute(attribute, search_term):
     session = Session()
-    # Query the club by name
-    my_list = list(club_name)
     
-    conditions = []
-    for letter in my_list:
-       conditions.append(Club.name.ilike(f"%{letter}%"))
-        
-    #clubs = session.query(Club).filter(and_(*conditions)).all()
-    clubs = session.query(Club).filter(Club.name.ilike(f"%{club_name}%")).all()
+    if attribute == 'name':
+        clubs = session.query(Club).filter(Club.name.ilike(f"%{search_term}%")).all()
+    elif attribute == 'id':
+        clubs = session.query(Club).filter(Club.id == int(search_term)).all()
+    elif attribute == 'description':
+        clubs = session.query(Club).filter(Club.description.ilike(f"%{search_term}%")).all()
+    else:
+        return jsonify({'error': 'Invalid search attribute'}), 400
     
-    if not clubs:  # Check if the list is empty
-        print(f"No clubs found for the name: {club_name}")
-        return jsonify({'error': 'Club not found'}), 404
+    if not clubs:
+        return jsonify({'error': 'No clubs found'}), 404
 
-
-    # Create a list of dictionaries for each club found
-    club_list = []
-    for club in clubs:
-        club_list.append({
-            'id': club.id,
-            'club_name': club.name,
-            'club_description': club.description,
-        })
-        
+    club_list = [{
+        'id': club.id,
+        'club_name': club.name,
+        'club_description': club.description,
+    } for club in clubs]
+    
     return jsonify(club_list)
 
 @app.route('/b/events/name/<string:event_name>', methods=['GET'])
