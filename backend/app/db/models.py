@@ -37,6 +37,13 @@ club_user_relationship = Table(
     Column("club_id", ForeignKey("club.id")),
 )
 
+event_user_relationship = Table(
+    "event_user_relationship",
+    Model.metadata,
+    Column("user_id", ForeignKey("user.id")),
+    Column("event_id", ForeignKey("event.id")),
+)
+
 @dataclass
 class User(Model):
 
@@ -59,6 +66,10 @@ class User(Model):
 
     clubs: Mapped[List[Club]] = relationship(
         secondary=club_user_relationship, back_populates="users"
+    )
+    
+    events: Mapped[List[Event]] = relationship(
+        secondary=event_user_relationship, back_populates="users"
     )
 
     comments: Mapped[List[Comment]] = relationship("Comment", back_populates="user")
@@ -118,17 +129,15 @@ class Event(Model):
     event_name: Mapped[str] = mapped_column(String(255), nullable=False)
     event_description: Mapped[str] = mapped_column(String(500), nullable=False)
     event_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-
-    # Assuming time is handled as a string like "12:30 PM"
+    rsvp_list: Mapped[List[User]] = mapped_column(List[User], nullable=True)
     event_time: Mapped[str] = mapped_column(String(10), nullable=False)
-    
     event_location: Mapped[str] = mapped_column(String(255), nullable=False)
-
-    # Can be optional if not supplied yet
     event_club: Mapped[str] = mapped_column(String(255), nullable=True)  
-
-    # Assuming tags are a comma-separated string for now
     event_tags: Mapped[str] = mapped_column(String(255), nullable=True)  
+    
+    users: Mapped[List[User]] = relationship(
+        secondary=event_user_relationship, back_populates="events"
+    )
 
     # TODO: relationship to club, tags, etc...
 
