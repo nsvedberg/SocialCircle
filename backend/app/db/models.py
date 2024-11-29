@@ -129,7 +129,6 @@ class Event(Model):
     event_name: Mapped[str] = mapped_column(String(255), nullable=False)
     event_description: Mapped[str] = mapped_column(String(500), nullable=False)
     event_date: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    rsvp_list: Mapped[List[User]] = mapped_column(List[User], nullable=True)
     event_time: Mapped[str] = mapped_column(String(10), nullable=False)
     event_location: Mapped[str] = mapped_column(String(255), nullable=False)
     event_club: Mapped[str] = mapped_column(String(255), nullable=True)  
@@ -140,6 +139,7 @@ class Event(Model):
     )
 
     # TODO: relationship to club, tags, etc...
+
 
     def __init__(self, event_name, event_description, event_date, event_time,
                  event_location, event_club=None, event_tags=None):

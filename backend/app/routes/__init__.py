@@ -255,15 +255,17 @@ def update_event(event_id):
     session = Session()
     data = request.get_json()
     event = session.query(Event).get(event_id)
+    if not event:
+        return jsonify({'error': 'Event not found'}), 404  # Handle event not found
     event.event_name = data['event_name']
     event.event_description = data['event_description']
     event.event_date = data['event_date']
     event.event_time = data['event_time']
     event.event_location = data['event_location']
-    event.event_club = data['event_club']
-    event.event_tags = data['event_tags']
     session.commit()
     return jsonify(event)
+
+#add in RSVP logic here!
 
 @app.route('/b/users/new', methods=['POST'])
 def create_user():
