@@ -7,12 +7,13 @@ const Chatbot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
 
-  // Base URL for the backend
 
 
   // Fetch messages from the database on component mount
   useEffect(() => {
-    fetch(`/b/messages`)
+    fetch(`/b/messages/all_messages`, {
+      method: 'GET'
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -28,7 +29,7 @@ const Chatbot = () => {
       const newMessage = { text: input, is_user: true };
 
       // Add the new message to the database
-      fetch(`b/messages/`, {
+      fetch(`/b/messages/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,7 +50,7 @@ const Chatbot = () => {
           setTimeout(() => {
             const botMessage = { text: 'Got it! How can I help you?', is_user: false };
 
-            fetch(`b/messages/`, {
+            fetch(`/b/messages/`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

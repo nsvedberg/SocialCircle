@@ -368,7 +368,7 @@ def get_clubs_for_user(user_id):
         } for club in user.clubs
     ])
 
-@app.route('/b/messages/', methods=['GET'])
+@app.route('/b/messages/all_messages', methods=['GET'])
 def get_all_messages():
     session = Session()
     messages = session.query(Message).order_by(Message.created_at).all()
