@@ -177,4 +177,5 @@ class Message(Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     text: Mapped[str] = mapped_column(Text, nullable=False)
     is_user: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    groupchat_name: Mapped[str] = mapped_column(String(255), nullable=False)  # New field for groupchat name
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)

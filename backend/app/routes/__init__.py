@@ -381,22 +381,24 @@ def get_clubs_for_user(user_id):
         } for club in user.clubs
     ])
 
-@app.route('/b/messages/all_messages', methods=['GET'])
-def get_all_messages():
+@app.route('/b/messages/<string:groupchat_name>/all_messages', methods=['GET'])
+def get_all_messages(groupchat_name):
     session = Session()
-    messages = session.query(Message).order_by(Message.created_at).all()
+    messages = session.query(Message).filter(Message.groupchat_name == groupchat_name).order_by(Message.created_at).all()
     return jsonify([
         {
             'id': message.id,
             'text': message.text,
             'is_user': message.is_user,
+            'groupchat_name': message.groupchat_name,
             'created_at': message.created_at.strftime('%Y-%m-%d %H:%M:%S'),
         } for message in messages
     ])
 
+
 # Route to add a new message
-@app.route('/b/messages/', methods=['POST'])
-def add_message():
+@app.route('/b/messages/<string:groupchat_name>/', methods=['POST'])
+def add_message(groupchat_name):
     session = Session()
     data = request.get_json()
 
@@ -406,6 +408,7 @@ def add_message():
     new_message = Message(
         text=data['text'],
         is_user=data['is_user'],
+        groupchat_name=groupchat_name,
     )
     session.add(new_message)
     session.commit()
@@ -414,8 +417,10 @@ def add_message():
         'id': new_message.id,
         'text': new_message.text,
         'is_user': new_message.is_user,
+        'groupchat_name': new_message.groupchat_name,
         'created_at': new_message.created_at.strftime('%Y-%m-%d %H:%M:%S'),
     }), 201
+
 
 
 
