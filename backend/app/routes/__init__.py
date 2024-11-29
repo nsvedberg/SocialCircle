@@ -376,11 +376,12 @@ def get_all_messages(groupchat_name):
         {
             'id': message.id,
             'text': message.text,
-            'is_user': message.is_user,
+            'user_id': message.user_id,  # Corrected attribute name
             'groupchat_name': message.groupchat_name,
             'created_at': message.created_at.strftime('%Y-%m-%d %H:%M:%S'),
         } for message in messages
     ])
+
 
 
 # Route to add a new message
@@ -389,12 +390,12 @@ def add_message(groupchat_name):
     session = Session()
     data = request.get_json()
 
-    if not data or 'text' not in data or 'is_user' not in data:
+    if not data or 'text' not in data or 'user_id' not in data:
         return jsonify({'error': 'Invalid input'}), 400
 
     new_message = Message(
         text=data['text'],
-        is_user=data['is_user'],
+        user_id=data['user_id'],  # Include user_id
         groupchat_name=groupchat_name,
     )
     session.add(new_message)
@@ -403,10 +404,11 @@ def add_message(groupchat_name):
     return jsonify({
         'id': new_message.id,
         'text': new_message.text,
-        'is_user': new_message.is_user,
+        'user_id': new_message.user_id,
         'groupchat_name': new_message.groupchat_name,
         'created_at': new_message.created_at.strftime('%Y-%m-%d %H:%M:%S'),
     }), 201
+
 
 
 
