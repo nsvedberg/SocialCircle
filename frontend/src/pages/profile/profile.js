@@ -57,6 +57,7 @@ const Profile = () => {
   return (
     <div className='profile-container'>
       <h1>Profile</h1>
+      <a href={"/user/" + currentUser.id}>See public profile</a>
       <div className='profile-header'>
         <h2>{currentUser.email}</h2>
       </div>
